@@ -1,14 +1,11 @@
 <div class="main-window">
 <header class="top-bar"><div class="brand"><span class="sigil">✦</span><div><strong>CHOICE<span>ENGINE</span></strong><small>YOUR STORY, YOUR DESTINY</small></div></div><div class="prototype">MULTI-GAME · ALPHA</div></header>
-<main class="content"><div class="page-title"><div class="eyebrow">◆ THE ADVENTURER'S COMPANION ◆</div><h1>{{view()==='home'?'Home':view()==='games'?'Games':view()==='ending'?'Your Ending':view()==='chapters'?'Chapters':view()==='journey'?'Story Tracker':view()==='quests'?'Quest Ledger':'Chronicle'}}</h1><div class="ornament">━━━━ ✧ ━━━━</div></div>
+<main class="content"><div class="page-title"><h1>{{view()==='home'?'Home':view()==='games'?'Games':view()==='ending'?'Choose Ending':view()==='chapters'?'Chapters':view()==='journey'?'Tracker':view()==='quests'?'Quests':'History'}}</h1></div>
 @if(loading()){<section class="panel expanded"><h2>Opening the game library...</h2><p>Loading the game catalog.</p></section>}
 @else if(error()){<section class="panel expanded"><h2>Unable to load story</h2><p>{{error()}}</p><p>Verify that the database build produced public/data/game-of-thrones.json.</p></section>}
 @else if(dataset();as data){
 @if(view()==='home'){
 <section class="panel expanded home-panel news-panel">
-  <div class="overline">THE LATEST FROM CHOICE ENGINE</div>
-  <h2>News Feed</h2>
-  <p class="news-intro">New games added to the collection and updates to their story trackers.</p>
   <div class="news-list">
     @for(item of news();track item.id){
       <article class="news-entry">
@@ -23,9 +20,6 @@
 }
 @else if(view()==='games'){
 <section class="panel expanded games-panel">
-  <div class="overline">YOUR STORY COLLECTION</div>
-  <h2>Games</h2>
-  <p class="games-help">Select a game to open its tracker. Completion is based on the story steps mapped so far.</p>
   <div class="games-list">
     @for(game of games();track game.id){
       <button class="game-row" (click)="selectGame(game.id)" [attr.aria-label]="'Open '+game.title+(gameProgress()[game.id] !== undefined ? ', '+gameProgress()[game.id]+'% of mapped steps completed' : '')">
@@ -45,89 +39,95 @@
 }
 @else if(view()==='ending'){
 <section class="panel expanded ending-panel">
- <div class="overline">YOUR STORY · STEP ONE</div>
- <h2>How should your story end?</h2>
- <p class="ending-intro">Choose the kind of ending you want to pursue. No characters, twists or events are revealed here.</p>
+ <div class="compact-game-name">{{currentGame()?.title}}</div>
  <div class="ending-options" role="group" aria-label="Spoiler-free ending preferences">
   @for(choice of endingChoices;track choice.id){
    <button class="ending-option" [class.is-selected]="endingDraft()===choice.id" [attr.aria-pressed]="endingDraft()===choice.id" (click)="chooseEnding(choice.id)">
     <span class="ending-symbol" aria-hidden="true">{{choice.symbol}}</span>
-    <span class="ending-option-copy"><strong>{{choice.title}}</strong><small>{{choice.description}}</small></span>
+    <span class="ending-option-copy"><strong>{{choice.title}}</strong></span>
     <span class="ending-check" aria-hidden="true">{{endingDraft()===choice.id?'✓':'◇'}}</span>
    </button>
   }
  </div>
- <p class="ending-disclaimer">Your preference is private to this device. Choices are only recommended when a route has been verified; unfinished story data stays neutral.</p>
  <div class="ending-footer">
   <button class="ending-back" (click)="view.set('games')">← Games</button>
-  <button class="ending-continue" [disabled]="!endingDraft()" (click)="confirmEnding()">Continue to Tracker →</button>
+  <button class="ending-continue" [disabled]="!endingDraft()" (click)="confirmEnding()">Continue →</button>
  </div>
 </section>
 }
 @else if(view()==='chapters'){
 <section class="panel expanded chapters-panel">
- <div class="overline">CHOOSE WHERE TO CONTINUE</div>
- <h2>{{currentGame()?.title}}</h2>
- <p class="ending-intro">Choose an episode and chapter. Only mapped events are available in the tracker.</p>
+ <div class="compact-game-name">{{currentGame()?.title}}</div>
  @if(episodes().length){
-  <label class="section-label" for="chapter-episode">EPISODE</label>
   <div class="select-box chapter-episode-select"><span>❖</span>
-   <select id="chapter-episode" [value]="episodeId()" (change)="selectEpisode($any($event.target).value)">
+   <select aria-label="Episode" [value]="browseEpisodeId()" (change)="selectBrowseEpisode($any($event.target).value)">
     @for(ep of episodes();track ep.id){<option [value]="ep.id">{{ep.number}} · {{ep.title}}</option>}
    </select>
   </div>
   <div class="chapter-options">
-   @for(scene of chapters();track scene.id){
+   @for(scene of browseChapters();track scene.id){
     <button class="chapter-option" (click)="goToChapter(scene.id)">
      <span class="chapter-number">{{scene.number}}</span>
      <span class="chapter-name">{{scene.title}}</span>
      <span aria-hidden="true">→</span>
     </button>
-   }@empty{<p>Chapters have not been mapped yet.</p>}
+   }@empty{<p>Chapters not mapped yet.</p>}
   </div>
- }@else{<p>No chapters have been mapped for this game yet.</p>}
- <div class="ending-footer"><button class="ending-back" (click)="openTracker()">← Back to Tracker</button></div>
+ }@else{<p>No chapters available.</p>}
+ <div class="ending-footer"><button class="ending-back" (click)="openTracker()">← Tracker</button></div>
 </section>
 }
 @else if(view()==='journey'){
 @if(episodes().length){
 <div class="columns">
 <section class="panel story">
- <div class="overline">CURRENT ADVENTURE</div>
- <div class="game"><span class="game-icon">{{currentGame()?.adapter==='telltale'?'♜':'⚔'}}</span><div><h2>{{currentGame()?.title}}</h2><small>{{currentGame()?.developer}}</small></div></div>
- <hr>
- <div class="section-label">YOUR CHOSEN ENDING</div>
+ <div class="game"><span class="game-icon">{{currentGame()?.adapter==='telltale'?'♜':'⚔'}}</span><div><h2>{{currentGame()?.title}}</h2></div></div>
  <button class="desired-ending-button" (click)="openEndingSelection()"><span>✧ &nbsp;{{endingLabel()}}</span><span>CHANGE →</span></button>
- <p class="aside-copy">Spoiler-free ending preference. Guidance is shown only when the choice consequences have been verified.</p>
  <button class="desktop-chapters" (click)="openChapters()">Browse episodes &amp; chapters →</button>
  <div class="progress"><div>CHAPTER COVERAGE <b>{{completed()}} / {{nodes().length}} tracked</b></div><i><span [style.width.%]="completion()"></span></i></div>
 </section>
-<section class="panel tracker"><div class="overline">LIVE STORY TRACKER</div>
+<section class="panel tracker">
 <div class="tracker-tools">
  <button (click)="openEndingSelection()" [attr.aria-label]="'Change ending: '+endingLabel()">✧ {{endingLabel()}} <span aria-hidden="true">⌄</span></button>
  <button (click)="openChapters()">☷ Chapters <span aria-hidden="true">→</span></button>
-</div><div class="eyebrow">EPISODE {{currentEpisode()?.number}} · {{currentScene()?.title}}</div><h2>{{activeNode()?.title || 'Chapter not mapped yet'}}</h2><p>{{activeNode()?.description || 'This chapter is in the episode index. Detailed actions and dialogue are not yet verified and entered.'}}</p><div class="chapter"><button (click)="previous()" [disabled]="index()===0 || !nodes().length" aria-label="Previous event">‹</button><select [value]="sceneId()" (change)="selectScene($any($event.target).value)" aria-label="Chapter">@for(scene of chapters();track scene.id){<option [value]="scene.id">{{scene.title}}</option>}</select><button (click)="next()" [disabled]="index()>=nodes().length-1 || !nodes().length" aria-label="Next event">›</button></div>
-@if(activeNode();as node){<div class="choice-caption">{{node.kind.toUpperCase()}} · STEP {{index()+1}} / {{nodes().length}} <span>{{node.coverage.toUpperCase()}} DATA</span></div>
-<div class="choice-scroll">
-@if(optionsFor(node).length){@for(option of optionsFor(node);track option.id){<button class="choice" [class.picked]="chosen(node)===option.id" [attr.data-tone]="goalTone(option)" (click)="pick(node,option)"><span class="mark">{{chosen(node)===option.id?'✓':'◇'}}</span><span class="choice-text"><strong>{{option.label}}</strong><small>{{option.response_kind==='silent'?'Silence / no reply':option.response_kind==='failure'?'Failure or retry':option.response_kind==='success'?'Complete the prompt':'Record this response or action'}}</small></span><em>{{toneLabels[goalTone(option)]}}</em></button>}}
-@else{<button class="action-button" (click)="mark(node)">{{chosen(node)==='done'?'✓ Completed — Continue':'✓ Mark done & continue'}}</button>}
 </div>
-<div class="hint">✧ &nbsp;{{chosen(node)?'Recorded: '+labelFor(node):'Track one event at a time as you play.'}} <button class="inline-link" (click)="view.set('chronicle')">VIEW HISTORY ↗</button></div>
-} @else {<div class="empty-state"><span>✧</span><strong>Awaiting research</strong><p>Episode metadata exists, but no event sequence has been verified for this chapter.</p></div>}
+<div class="tracker-position">
+ <button (click)="previous()" [disabled]="index()===0 || !nodes().length" aria-label="Previous step">‹</button>
+ <span>EP {{currentEpisode()?.number}} · {{currentScene()?.title}} · {{nodes().length?index()+1:0}}/{{nodes().length}}</span>
+ <button (click)="next()" [disabled]="index()>=nodes().length-1 || !nodes().length" aria-label="Next step">›</button>
+</div>
+<h2>{{activeNode()?.title || 'Chapter not mapped yet'}}</h2>
+<p class="tracker-description">{{activeNode()?.description || 'This chapter has no mapped events yet.'}}</p>
+@if(activeNode();as node){
+<div class="choice-scroll">
+ @if(optionsFor(node).length){
+  @for(option of optionsFor(node);track option.id){
+   <button class="choice" [class.picked]="chosen(node)===option.id" [attr.data-tone]="goalTone(option)" (click)="pick(node,option)">
+    <span class="mark">{{chosen(node)===option.id?'✓':'◇'}}</span>
+    <span class="choice-text"><strong>{{option.label}}</strong></span>
+    @if(goalTone(option)!=='unknown'){<em>{{toneLabels[goalTone(option)]}}</em>}
+   </button>
+  }
+ }@else{<button class="action-button" (click)="mark(node)">{{chosen(node)==='done'?'✓ Completed — Next':'✓ Done — Next'}}</button>}
+</div>
+<div class="tracker-foot">
+ @if(chosen(node)){<span class="tracker-saved">✓ Saved</span>}
+ <button class="inline-link" (click)="view.set('chronicle')">History →</button>
+</div>
+}@else{<div class="empty-state"><strong>No steps available</strong></div>}
 </section>
-<aside class="panel quests"><div class="overline">THE QUEST LEDGER</div><div class="quest-header"><h2>Objectives</h2><button (click)="view.set('quests')">VIEW ALL ↗</button></div>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><i class="quest-track"><span [style.width]="questCompleted(quest)?'100%':'0%'"></span></i></span></div>}<div class="quest-summary">✦ RECORDED EVENTS <b>{{records().length}} / {{data.nodes.length}}</b></div></aside>
+<aside class="panel quests"><div class="quest-header"><h2>Objectives</h2><button (click)="view.set('quests')">VIEW ALL ↗</button></div>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><i class="quest-track"><span [style.width]="questCompleted(quest)?'100%':'0%'"></span></i></span></div>}<div class="quest-summary">✦ RECORDED EVENTS <b>{{records().length}} / {{data.nodes.length}}</b></div></aside>
 </div>
 } @else{
 <section class="panel expanded">
-  <div class="overline">GAME SELECTED</div>
   <h2>{{currentGame()?.title}}</h2>
-  <p>This game is registered, but no episodes, choices or quests have been mapped yet.</p>
+  <p>Tracker coming soon.</p>
   <button class="back-home" (click)="view.set('games')">← Back to Games</button>
 </section>
 }
 }
-@else if(view()==='quests'){<section class="panel expanded"><div class="overline">THE QUEST LEDGER</div><h2>Tracked Objectives</h2><p>Objectives are linked to story nodes; quest state is derived from your recorded actions.</p>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><small>{{questCompleted(quest)?'TRACKED':'NOT YET RESOLVED'}}</small></span></div>}</section>}
-@else if(view()==='chronicle'){<section class="panel expanded"><div class="overline">YOUR STORY SO FAR</div><h2>Chronicle</h2><p>Recorded events stay on this device in local prototype storage.</p><div class="journal-list">@for(node of records();track node.id){<div class="journal"><div class="eyebrow">{{node.kind.toUpperCase()}}</div><h3>{{node.title}}</h3><p>{{labelFor(node)}}</p></div>}@empty{<div class="journal">No events recorded. Open the Story Tracker to begin.</div>}</div><div class="reset-row">@if(resetConfirm()){<span>Erase all local demo progress?</span><button class="danger-button" (click)="reset()">Confirm reset</button><button (click)="cancelReset()">Cancel</button>}@else{<button (click)="reset()">Reset local progress</button>}</div><button class="back-home" (click)="view.set('journey')">← Back to Tracker</button></section>}
+@else if(view()==='quests'){<section class="panel expanded">@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><small>{{questCompleted(quest)?'TRACKED':'NOT YET RESOLVED'}}</small></span></div>}</section>}
+@else if(view()==='chronicle'){<section class="panel expanded"><div class="journal-list">@for(node of records();track node.id){<div class="journal"><div class="eyebrow">{{node.kind.toUpperCase()}}</div><h3>{{node.title}}</h3><p>{{labelFor(node)}}</p></div>}@empty{<div class="journal">No events recorded. Open the Story Tracker to begin.</div>}</div><div class="reset-row">@if(resetConfirm()){<span>Erase all local demo progress?</span><button class="danger-button" (click)="reset()">Confirm reset</button><button (click)="cancelReset()">Cancel</button>}@else{<button (click)="reset()">Reset local progress</button>}</div><button class="back-home" (click)="view.set('journey')">← Back to Tracker</button></section>}
 }
 </main>
 <footer class="bottom-bar"><nav aria-label="Main navigation"><button class="home-nav" [class.active]="view()==='home'" (click)="view.set('home')"><span>⌂</span>HOME</button><button [class.active]="view()==='games'" (click)="view.set('games')"><span>▦</span>GAMES</button><button [class.active]="view()==='journey'||view()==='chronicle'||view()==='ending'||view()==='chapters'" (click)="openTracker()"><span>⌖</span>TRACKER</button><button [class.active]="view()==='quests'" (click)="view.set('quests')"><span>☷</span>QUESTS</button><div class="save">● LOCAL DEMO SAVE</div></nav></footer></div>

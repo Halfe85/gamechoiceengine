@@ -176,3 +176,70 @@
  .ending-option{min-height:60px}
  .ending-disclaimer{margin:7px 0!important}
 }
+
+/* Compact workspace: one title per screen, with controls in a single short row. */
+.content{padding-top:13px;padding-bottom:14px}
+.page-title{margin-bottom:11px}
+.page-title h1{font-size:27px;line-height:1.2;margin:0}
+.compact-game-name{font:600 13px/1.35 Cinzel,serif;color:#866b45;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-bottom:13px;min-height:18px}
+.ending-panel,.chapters-panel{gap:0}
+.ending-options{gap:8px}
+.ending-option{min-height:62px;padding:9px 13px;gap:12px}
+.ending-symbol{height:36px;width:36px;flex-basis:36px;font-size:19px}
+.ending-option-copy strong{font-size:14px}
+.ending-footer{padding-top:10px;margin-top:12px}
+.ending-footer button{min-height:40px;padding:9px 15px}
+.chapter-episode-select{margin-bottom:12px}
+.chapter-option{min-height:52px;padding:11px 14px}
+.story .desired-ending-button{margin-top:22px}
+.tracker .tracker-tools{margin:0 0 10px}
+.tracker .tracker-tools button{min-height:34px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.tracker .tracker-tools button:first-child{max-width:60%}
+.tracker-position{display:flex;align-items:center;justify-content:space-between;min-height:31px;gap:5px;border-top:1px solid #e5d7bd;border-bottom:1px solid #e5d7bd;margin-bottom:12px}
+.tracker-position button{border:0;background:transparent;color:#92734d;font-size:25px;line-height:1;padding:1px 10px;min-width:34px}
+.tracker-position button:disabled{opacity:.25;cursor:default}
+.tracker-position>span{text-align:center;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;font-size:10px;color:#886c47;font-weight:700}
+.tracker h2{font-size:20px;margin:0}
+.tracker .tracker-description{margin:7px 0 13px;font-size:12px;line-height:1.5}
+.tracker .choice-scroll{flex:1;min-height:0}
+.tracker .choice{min-height:48px;padding:10px;margin-bottom:7px}
+.tracker .choice-text strong{line-height:1.4}
+.tracker-foot{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-shrink:0;border-top:1px solid #e7d8c1;margin-top:5px;min-height:31px}
+.tracker-foot .inline-link{font-size:10px;margin:0}
+.tracker-saved{font-size:10px;color:#55775a}
+@media(max-width:900px){
+ .tracker{padding:14px}
+ .tracker h2{font-size:18px}
+}
+@media(max-width:700px){
+ .main-window{grid-template-rows:56px minmax(0,1fr) 60px}
+ .content{padding:10px 10px 8px}
+ .page-title{margin-bottom:8px}
+ .page-title h1{font-size:21px}
+ .ending-panel,.chapters-panel{padding:12px}
+ .compact-game-name{font-size:12px;margin-bottom:9px}
+ .ending-options{gap:7px}
+ .ending-option{min-height:55px;padding:8px 10px;gap:10px}
+ .ending-symbol{height:32px;width:32px;flex-basis:32px;font-size:17px}
+ .ending-option-copy strong{font-size:12px}
+ .ending-check{font-size:18px}
+ .ending-footer{padding-top:9px;margin-top:9px}
+ .ending-footer button{min-height:40px}
+ .tracker{padding:12px}
+ .tracker .tracker-tools{gap:6px;margin-bottom:9px}
+ .tracker .tracker-tools button{min-height:33px;padding:6px 8px;font-size:9px}
+ .tracker-position{min-height:28px;margin-bottom:9px}
+ .tracker h2{font-size:17px}
+ .tracker .tracker-description{font-size:11px;margin:6px 0 10px}
+ .tracker .choice{padding:9px;min-height:43px}
+ .tracker .choice-text strong{font-size:11px}
+ .tracker-foot{min-height:26px}
+ .news-panel,.games-panel{padding:12px}
+ .game-row{margin-bottom:6px}
+}
+@media(max-height:570px){
+ .ending-option{min-height:47px}
+ .page-title{margin-bottom:5px}
+ .compact-game-name{margin-bottom:6px}
+ .ending-footer{padding-top:6px;margin-top:6px}
+}
