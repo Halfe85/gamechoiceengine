@@ -2,3 +2,5 @@ node_modules/
 dist/
 .angular/
 *.log
+public/data/*.sqlite
+public/data/*.json

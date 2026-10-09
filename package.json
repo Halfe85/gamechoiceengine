@@ -4,7 +4,9 @@
   "private": true,
   "scripts": {
     "start": "ng serve",
-    "build": "ng build"
+    "build": "ng build",
+    "prestart": "python3 database/build.py",
+    "prebuild": "python3 database/build.py"
   },
   "dependencies": {
     "@angular/common": "^20.0.0",
