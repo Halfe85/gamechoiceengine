@@ -29,3 +29,29 @@ jobs:
           path: dist/gamechoiceengine/browser
       - id: deployment
         uses: actions/deploy-pages@v4
+
+  # One-time cleanup requested by the repository owner.
+  # Only delete the redundant branch after a successful Angular deployment,
+  # and only when the branch SHA is still the one reviewed for this change.
+  cleanup-home-branch:
+    needs: deploy
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove redundant ui/home-game-selection branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          expected="6f50d3a5af2b1c7f9f91af03b4298e123caccca9"
+          current="$(git ls-remote --heads origin refs/heads/ui/home-game-selection | awk '{print $1}')"
+          if [[ -z "$current" ]]; then
+            echo "Branch was already deleted."
+            exit 0
+          fi
+          if [[ "$current" != "$expected" ]]; then
+            echo "Branch has changed since review; refusing to delete."
+            exit 1
+          fi
+          git push origin --delete ui/home-game-selection
