@@ -144,6 +144,18 @@ def make_database(db):
            config_json=json.dumps({"input":"follow game prompt","duration":"game-defined","outcome_recording":"manual"}),
            success_option_id="got-e1-escape-complete",
            failure_option_id="got-e1-escape-failed")
+    # Strict publication rule: a dialogue must contain every verified
+    # on-screen response, not merely a prompt or plausible placeholder.
+    verified_turns = db.execute("""
+        SELECT id FROM dialogue_turns WHERE verification = 'verified'
+    """).fetchall()
+    for row in verified_turns:
+        options = db.execute("""
+            SELECT verification, source_id FROM dialogue_options
+            WHERE turn_id = ? ORDER BY position
+        """, (row["id"],)).fetchall()
+        if not options or any(o["verification"] != "verified" or not o["source_id"] for o in options):
+            raise ValueError(f"Incomplete exact dialogue for {row['id']}")
     db.commit()
     errors = db.execute("PRAGMA foreign_key_check").fetchall()
     if errors:

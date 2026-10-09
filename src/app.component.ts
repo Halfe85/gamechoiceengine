@@ -275,7 +275,9 @@ export class AppComponent implements OnInit {
      return updated;
    });
    this.saveProgress();
-   this.next();
+   // Stay on the selected line so exact follow-up dialogue remains visible.
+   // The player advances deliberately with the Next arrow.
+   this.savePosition();
  }
  goalTone(option:Option):Tone{
    const d=this.dataset();if(!d)return 'unknown';
