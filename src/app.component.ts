@@ -246,7 +246,8 @@ export class AppComponent implements OnInit {
      ? (d.dialogue_turns ?? []).filter(t=>t.node_id===currentNode.id).sort((a,b)=>a.turn_index-b.turn_index)
      : [];
    const storedTurnIndex=position?.turnId?turns.findIndex(turn=>turn.id===position?.turnId):-1;
-   const fallbackTurn=position&&Number.isInteger(position.turnIndex)?position.turnIndex:0;
+   const fallbackTurn=position && typeof position.turnIndex==='number' &&
+     Number.isInteger(position.turnIndex) ? position.turnIndex : 0;
    this.dialogueIndex.set(Math.max(0,Math.min(turns.length-1,storedTurnIndex>=0?storedTurnIndex:fallbackTurn)));
  }
 
