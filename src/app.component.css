@@ -33,3 +33,30 @@
 .choice-caption span{font-size:8px}
 .choice em{max-width:70px;white-space:normal;text-align:right;line-height:1.2}
 }
+
+
+/* Home: database-driven game selector, scrollable on desktop and mobile. */
+.home-panel{max-width:1100px;width:100%;overflow-y:auto}
+.home-panel>.overline{margin-bottom:10px}
+.home-panel>h2{margin-bottom:6px}
+.games-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,270px),1fr));gap:16px;margin:22px 0 10px}
+.game-card{display:flex;flex-direction:column;align-items:stretch;min-height:248px;min-width:0;text-align:left;border:1px solid #cfb990;background:#fffaf0;color:#51402c;padding:19px;box-shadow:0 3px 12px #76562610;transition:background .15s,border-color .15s,transform .15s}
+.game-card:hover{background:#f4e8d2;border-color:#ad8548;transform:translateY(-2px)}
+.game-card:focus-visible{outline:2px solid #99723c;outline-offset:3px}
+.game-card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;margin-bottom:19px}
+.game-avatar{display:grid;place-items:center;width:48px;height:48px;border:1px solid #d4bf9b;background:#eee3d0;color:#967044;font-size:26px}
+.game-status{font:700 9px 'DM Sans',sans-serif;letter-spacing:1px;color:#597450;border:1px solid #a9b89c;background:#eaf0e4;padding:6px}
+.game-status.planned{color:#8b785b;border-color:#d1c2a8;background:#f4eee1}
+.game-card>strong{font:600 18px Cinzel,serif;line-height:1.35}
+.game-card>small{font:700 10px 'DM Sans',sans-serif;color:#987d57;letter-spacing:.6px;margin-top:7px}
+.game-card>p{flex:1;font:400 12px/1.6 'DM Sans',sans-serif;color:#776750;margin:13px 0 20px}
+.game-card-bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;border-top:1px solid #e4d7c3;padding-top:12px;font:700 9px 'DM Sans',sans-serif;letter-spacing:.5px;color:#927346}
+.back-home{border:1px solid #baa173;background:#f1e5d0;color:#6c502f;font-weight:700;padding:12px 18px}
+@media(max-width:700px){
+ .home-panel{padding:16px}
+ .games-grid{grid-template-columns:minmax(0,1fr);gap:12px;margin-top:16px}
+ .game-card{min-height:208px;padding:15px}
+ .game-card-top{margin-bottom:12px}
+ .game-avatar{width:40px;height:40px}
+ .game-card>strong{font-size:16px}
+}
