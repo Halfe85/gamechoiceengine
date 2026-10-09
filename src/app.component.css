@@ -65,3 +65,13 @@
 .inline-link{border:0;background:transparent;color:#8a6a38;font-size:10px;font-weight:700;text-decoration:underline;text-underline-offset:3px;padding:5px 2px;margin-left:7px}
 .inline-link:hover{color:#5c411d}
 @media(max-width:700px){.inline-link{margin-left:2px;font-size:9px}.bottom-bar nav{justify-content:space-evenly}}
+
+/* Keep Home at the far-right edge of the fixed bottom bar on all screen sizes. */
+.bottom-bar nav{width:100%;min-width:0}
+.bottom-bar nav .save{align-self:center;margin-left:18px}
+.bottom-bar nav .home-nav{margin-left:auto}
+@media(max-width:700px){
+  .bottom-bar nav{justify-content:flex-start}
+  .bottom-bar nav button{flex:0 0 85px}
+  .bottom-bar nav .home-nav{margin-left:auto}
+}
