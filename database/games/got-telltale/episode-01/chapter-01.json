@@ -1,0 +1,2365 @@
+{
+  "schema_version": "1.0.0",
+  "format": "choiceengine.chapter.timeline",
+  "game_id": "got-telltale",
+  "episode": {
+    "id": "got-e1",
+    "number": 1,
+    "title": "Iron From Ice"
+  },
+  "chapter": {
+    "id": "got-e1-c1",
+    "number": 1,
+    "working_title": "The Forrester Camp",
+    "boundary_start": "The Forrester group outside the Twins",
+    "boundary_end": "After the farm confrontation, before Ironrath",
+    "character": "Gared Tuttle"
+  },
+  "original_language": "en",
+  "content_status": "scaffold_incomplete",
+  "copyright_policy": "Public file contains original structural annotations and EMPTY verbatim dialogue slots. Only publish quoted dialogue when permission or another appropriate basis has been established.",
+  "transcription_policy": {
+    "goal": "Exhaustive transcript: every spoken, written, and background line, all on-screen prompts/options, player-selected spoken replies, alternative branches, ambient action, QTEs, timeouts, and state changes.",
+    "insert_spoken_lines_as": "speech events in chronological order, including NPC chatter between choice prompts",
+    "every_choice_requires": "exact text for each visible option, including silence/time-out, in the observed order",
+    "branch_model": "option-specific branch_timeline, followed by shared chronology; never mix mutually exclusive reactions",
+    "distinguish": "screen_text is what user chooses; branch_timeline speech is what the character actually says",
+    "never_guess": "null/pending means untranscribed, not silent; do not show as verified",
+    "source_rights": "Transcript references are research pointers, not permission to republish scripts."
+  },
+  "source_refs": [
+    {
+      "id": "telltale-fandom-iron-from-ice-transcript",
+      "kind": "fan_transcript",
+      "title": "Iron From Ice/Transcript – Telltale Game of Thrones Wiki",
+      "url": "https://ttgot.fandom.com/wiki/Iron_From_Ice/Transcript",
+      "scope": "full episode; find section 'The Twins, The Red Wedding - Gared' and Gared's family farm",
+      "use_for": [
+        "all spoken dialogue",
+        "variant lines",
+        "scene directions"
+      ],
+      "notes": "Community transcription may be incomplete or have mistakes; verify visually, particularly alternate branches."
+    },
+    {
+      "id": "gamepressure-e1c1-walkthrough",
+      "kind": "walkthrough",
+      "title": "Gamepressure – Episode 1 / Chapter 1",
+      "url": "https://www.gamepressure.com/gameofthronestelltale/chapter-1-episode-1-iron-from-ice/zd6dab",
+      "scope": "entire chapter 1",
+      "use_for": [
+        "choice sequence",
+        "gameplay actions",
+        "major choice points",
+        "QTE locations"
+      ],
+      "notes": "Does not give every intervening spoken line; do not copy its text wholesale."
+    },
+    {
+      "id": "english-gameplay-pc-part1",
+      "kind": "gameplay_video",
+      "title": "Game of Thrones: Iron From Ice – Part 1 (PC)",
+      "url": "https://www.youtube.com/watch?v=5_8-qAyB4Z8",
+      "scope": "early first episode footage",
+      "use_for": [
+        "on-screen UI",
+        "button prompts",
+        "timestamps",
+        "timed choice behavior"
+      ],
+      "notes": "Individual run records only one branch; dialogue/QTE interfaces vary by platform."
+    }
+  ],
+  "phases": [
+    {
+      "id": "camp",
+      "order": 1,
+      "location": "Forrester camp outside the Twins",
+      "intent": "opening conversations, sword interaction, camp celebrations"
+    },
+    {
+      "id": "lord",
+      "order": 2,
+      "location": "Forrester camp",
+      "intent": "Lord Forrester speaks to Gared"
+    },
+    {
+      "id": "bowen",
+      "order": 3,
+      "location": "Camp / supply area",
+      "intent": "Gared and Bowen carry out camp duties"
+    },
+    {
+      "id": "attack",
+      "order": 4,
+      "location": "Outside the Twins",
+      "intent": "attack, major decision, escape"
+    },
+    {
+      "id": "forest",
+      "order": 5,
+      "location": "Escape route",
+      "intent": "Lord Forrester's instructions and movement"
+    },
+    {
+      "id": "approach",
+      "order": 6,
+      "location": "Road near Gared's family farm",
+      "intent": "approach and discovery"
+    },
+    {
+      "id": "farm",
+      "order": 7,
+      "location": "Family farm",
+      "intent": "confrontation, timed combat, final decision"
+    }
+  ],
+  "state_flags": [
+    {
+      "key": "bowen_saved",
+      "initial": null,
+      "reason": "major opening rescue/warning decision, research outcome per branch"
+    },
+    {
+      "key": "lord_forrester_remembers_gared",
+      "initial": null,
+      "reason": "branch-specific feedback, not unconditional"
+    },
+    {
+      "key": "britt_shown_mercy",
+      "initial": null,
+      "reason": "end of chapter confrontation"
+    },
+    {
+      "key": "qte_retry_count",
+      "initial": 0,
+      "reason": "record QTE retries; failure behavior may vary"
+    }
+  ],
+  "timeline": [
+    {
+      "id": "got-e1-c1-001-camp-intro",
+      "order": 1,
+      "phase": "camp",
+      "kind": "scene",
+      "editor_note": "Forrester men gather around the campfire; capture every heard conversation and displayed text.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "location": "The Twins: Forrester camp",
+      "time_in_game": "night"
+    },
+    {
+      "id": "got-e1-c1-002-opening-talk",
+      "order": 2,
+      "phase": "camp",
+      "kind": "transcript_gap",
+      "editor_note": "All opening lines, songs and ambient camp remarks before Gared interacts with the sword.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-003-clean-sword",
+      "order": 3,
+      "phase": "camp",
+      "kind": "interaction",
+      "editor_note": "Player interacts with Lord Forrester's greatsword and cleans it.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "sword",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-004-sword-banter",
+      "order": 4,
+      "phase": "camp",
+      "kind": "speech",
+      "editor_note": "Dialogue immediately following the sword interaction; transcribe all intervening lines.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "speaker": null,
+      "text": null,
+      "delivery": "spoken",
+      "subtitle_text": null,
+      "language": "en",
+      "source_locator": null
+    },
+    {
+      "id": "got-e1-c1-005-sword-future",
+      "order": 5,
+      "phase": "camp",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to Bowen's remarks about the sword.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-sword-future",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-sword-future-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-future-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-future-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-future-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-006-norren-story",
+      "order": 6,
+      "phase": "camp",
+      "kind": "transcript_gap",
+      "editor_note": "All storyteller lines and the responses between dialogue menus.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-007-story-question",
+      "order": 7,
+      "phase": "camp",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared reacts while a Forrester soldier recounts a story.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-story-question",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-story-question-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-story-question-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-story-question-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-story-question-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-008-camp-duties",
+      "order": 8,
+      "phase": "camp",
+      "kind": "transcript_gap",
+      "editor_note": "Additional dialogue and actions between Norren's story and a work-related instruction.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-009-bowen-order",
+      "order": 9,
+      "phase": "camp",
+      "kind": "dialogue_choice",
+      "editor_note": "Bowen issues an instruction; Gared selects a reply.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-order",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-order-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-order-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-order-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-order-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-010-toast-leading",
+      "order": 10,
+      "phase": "camp",
+      "kind": "transcript_gap",
+      "editor_note": "Spoken lines leading up to a camp toast/house motto.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-011-camp-toast",
+      "order": 11,
+      "phase": "camp",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared chooses how to join in the celebration.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-camp-toast",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-camp-toast-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-camp-toast-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-camp-toast-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-camp-toast-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-012-lord-arrival",
+      "order": 12,
+      "phase": "lord",
+      "kind": "scene",
+      "editor_note": "Transition to Gared speaking with Lord Forrester.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-013-lord-greeting-lines",
+      "order": 13,
+      "phase": "lord",
+      "kind": "transcript_gap",
+      "editor_note": "Complete opening dialogue with Lord Forrester.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-014-lord-address",
+      "order": 14,
+      "phase": "lord",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared's initial reply during Lord Forrester's conversation.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-address",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-address-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-address-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-address-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-address-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-015-lord-offer-lines",
+      "order": 15,
+      "phase": "lord",
+      "kind": "transcript_gap",
+      "editor_note": "Capture all lines before Lord Forrester asks what Gared wants.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-016-lord-ambition",
+      "order": 16,
+      "phase": "lord",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to Lord Forrester's question about his ambitions.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-ambition",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-ambition-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-ambition-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-ambition-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-ambition-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-017-lord-promotion-lines",
+      "order": 17,
+      "phase": "lord",
+      "kind": "transcript_gap",
+      "editor_note": "All lines regarding Gared's service and new status.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-018-lord-promotion",
+      "order": 18,
+      "phase": "lord",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to the promotion announcement.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-promotion",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-promotion-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promotion-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promotion-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promotion-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-019-lord-leave",
+      "order": 19,
+      "phase": "lord",
+      "kind": "transcript_gap",
+      "editor_note": "All lines before Gared leaves to help Bowen.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-020-supply-area",
+      "order": 20,
+      "phase": "bowen",
+      "kind": "scene",
+      "editor_note": "Transition to helping Bowen near the camp supplies.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-021-bowen-leading",
+      "order": 21,
+      "phase": "bowen",
+      "kind": "transcript_gap",
+      "editor_note": "All conversation and background chatter before supply chores.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-022-bowen-supply",
+      "order": 22,
+      "phase": "bowen",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to Bowen's initial supply-related request.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-supply",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-supply-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-supply-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-supply-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-supply-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-023-supply-chores",
+      "order": 23,
+      "phase": "bowen",
+      "kind": "interaction",
+      "editor_note": "Perform the supply/wine work as prompted.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "camp supplies",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": null,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-024-work-banter",
+      "order": 24,
+      "phase": "bowen",
+      "kind": "transcript_gap",
+      "editor_note": "Background and foreground conversation while working.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-025-bowen-work",
+      "order": 25,
+      "phase": "bowen",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to a work-related remark.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-work",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-work-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-work-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-work-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-work-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-026-bowen-conversation",
+      "order": 26,
+      "phase": "bowen",
+      "kind": "transcript_gap",
+      "editor_note": "Other lines of discussion while preparing supplies.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-027-bowen-third",
+      "order": 27,
+      "phase": "bowen",
+      "kind": "dialogue_choice",
+      "editor_note": "Third dialogue selection in the work-area conversation.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-third",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-third-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-third-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-third-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-third-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-028-bowen-ambition-leading",
+      "order": 28,
+      "phase": "bowen",
+      "kind": "transcript_gap",
+      "editor_note": "Bowen discusses his prospects; preserve all lines.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-029-bowen-promotion",
+      "order": 29,
+      "phase": "bowen",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared can discuss his new role.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-promotion",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-promotion-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-promotion-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-promotion-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-promotion-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-030-attack-signs",
+      "order": 30,
+      "phase": "bowen",
+      "kind": "transcript_gap",
+      "editor_note": "Dialogue and ambience as Gared notices something is wrong.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-031-bowen-urgent",
+      "order": 31,
+      "phase": "bowen",
+      "kind": "dialogue_choice",
+      "editor_note": "Final dialogue selection before the attack becomes unavoidable.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-bowen-urgent",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-bowen-urgent-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-urgent-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-urgent-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-bowen-urgent-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-032-attack-begins",
+      "order": 32,
+      "phase": "attack",
+      "kind": "scene",
+      "editor_note": "The camp comes under attack; preserve shouts, animations, and background speech.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-033-battle-shouts",
+      "order": 33,
+      "phase": "attack",
+      "kind": "transcript_gap",
+      "editor_note": "All speech before the pivotal rescue/warning choice.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-034-rescue-bowen",
+      "order": 34,
+      "phase": "attack",
+      "kind": "decision",
+      "editor_note": "Decide whether to act for Lord Forrester or Bowen.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "fully_transcribed": false,
+        "slots": [
+          {
+            "id": "got-e1-c1-rescue-warn",
+            "position": 1,
+            "screen_text": null,
+            "editor_meaning": "Warn Lord Forrester",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-rescue-save",
+            "position": 2,
+            "screen_text": null,
+            "editor_meaning": "Save Bowen",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-035-fight-escape-1",
+      "order": 35,
+      "phase": "attack",
+      "kind": "qte",
+      "editor_note": "Timed control sequence immediately following the rescue/warning choice.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "survive the ambush",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-036-after-rescue-lines",
+      "order": 36,
+      "phase": "attack",
+      "kind": "transcript_gap",
+      "editor_note": "Consequence-specific speech before Gared meets Lord Forrester.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-037-lord-escape",
+      "order": 37,
+      "phase": "forest",
+      "kind": "scene",
+      "editor_note": "Gared and Lord Forrester regroup under pressure.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-038-lord-loss",
+      "order": 38,
+      "phase": "forest",
+      "kind": "dialogue_choice",
+      "editor_note": "First conversation after reconnecting during the attack.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-loss",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-loss-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-loss-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-loss-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-loss-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-039-lord-guilt",
+      "order": 39,
+      "phase": "forest",
+      "kind": "transcript_gap",
+      "editor_note": "Retain all dialogue and scene actions related to how the soldiers became separated.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-040-lord-account",
+      "order": 40,
+      "phase": "forest",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared explains his actions during the attack.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-account",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-account-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-account-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-041-run-through-ambush",
+      "order": 41,
+      "phase": "forest",
+      "kind": "qte",
+      "editor_note": "Timed running and combat actions in the escape route.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "flee the attack",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-042-forest-run-lines",
+      "order": 42,
+      "phase": "forest",
+      "kind": "transcript_gap",
+      "editor_note": "All dialogue while escaping.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-043-lord-wounded",
+      "order": 43,
+      "phase": "forest",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared reacts to Lord Forrester's condition.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-wounded",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-wounded-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-wounded-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-wounded-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-wounded-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-044-lord-orders",
+      "order": 44,
+      "phase": "forest",
+      "kind": "transcript_gap",
+      "editor_note": "Lord Forrester tells Gared what to do next.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-045-lord-command",
+      "order": 45,
+      "phase": "forest",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to the order to leave.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-command",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-command-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-command-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-command-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-command-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-046-lord-north-grove",
+      "order": 46,
+      "phase": "forest",
+      "kind": "transcript_gap",
+      "editor_note": "Every line about the message entrusted to Gared.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-047-lord-promise",
+      "order": 47,
+      "phase": "forest",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared responds to the message/instruction.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-lord-promise",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-lord-promise-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promise-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promise-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-lord-promise-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-048-escape-end",
+      "order": 48,
+      "phase": "forest",
+      "kind": "transcript_gap",
+      "editor_note": "All lines and actions as Gared leaves the area.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-049-road-transition",
+      "order": 49,
+      "phase": "approach",
+      "kind": "scene",
+      "editor_note": "Transition to the route toward Gared's family farm.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-050-follow-screams",
+      "order": 50,
+      "phase": "approach",
+      "kind": "interaction",
+      "editor_note": "Travel toward sounds heard offscreen and investigate surroundings.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "source of screams",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-051-farm-discovery",
+      "order": 51,
+      "phase": "approach",
+      "kind": "transcript_gap",
+      "editor_note": "All environmental details, overheard speech and optional observations.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-052-farm-confrontation",
+      "order": 52,
+      "phase": "farm",
+      "kind": "scene",
+      "editor_note": "The farmhouse confrontation begins; capture full lines from all sides.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "got-e1-c1-053-soldiers-threat",
+      "order": 53,
+      "phase": "farm",
+      "kind": "transcript_gap",
+      "editor_note": "All dialogue preceding Gared's first urgent action.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-054-draw-or-father",
+      "order": 54,
+      "phase": "farm",
+      "kind": "decision",
+      "editor_note": "Gared chooses an immediate response at the farm.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "fully_transcribed": false,
+        "slots": [
+          {
+            "id": "got-e1-c1-farm-draw",
+            "position": 1,
+            "screen_text": null,
+            "editor_meaning": "Draw the sword",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-farm-father",
+            "position": 2,
+            "screen_text": null,
+            "editor_meaning": "Move to his father",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-055-sword-identity",
+      "order": 55,
+      "phase": "farm",
+      "kind": "transcript_gap",
+      "editor_note": "Confrontation speech, including questions about the sword.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-056-sword-origin",
+      "order": 56,
+      "phase": "farm",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared answers where the sword came from.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-sword-origin",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-sword-origin-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-origin-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-origin-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-sword-origin-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-057-farm-defense-1",
+      "order": 57,
+      "phase": "farm",
+      "kind": "qte",
+      "editor_note": "Timed combat sequence during the sword confrontation.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "defend against attackers",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-058-farm-taunts",
+      "order": 58,
+      "phase": "farm",
+      "kind": "transcript_gap",
+      "editor_note": "All speech and action between combat stages.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-059-farm-defiance",
+      "order": 59,
+      "phase": "farm",
+      "kind": "dialogue_choice",
+      "editor_note": "Gared answers a threat about the sword.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "turn_id": "got-e1-c1-turn-farm-defiance",
+      "prompt_lines": [],
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "slots": [
+          {
+            "id": "got-e1-c1-farm-defiance-opt-1",
+            "position": 1,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-farm-defiance-opt-2",
+            "position": 2,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-farm-defiance-opt-3",
+            "position": 3,
+            "screen_text": null,
+            "is_silence": false,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-farm-defiance-opt-4",
+            "position": 4,
+            "screen_text": null,
+            "is_silence": true,
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "next_event_id": null,
+            "verification": "pending",
+            "source_locator": null
+          }
+        ],
+        "fully_transcribed": false,
+        "missing": [
+          "leading prompt and all in-between speech",
+          "exact menu text",
+          "player spoken response for each option",
+          "NPC reactions following each option",
+          "timeout behavior"
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-060-farm-defense-2",
+      "order": 60,
+      "phase": "farm",
+      "kind": "qte",
+      "editor_note": "Second timed combat/response sequence; log precise inputs.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "interaction": {
+        "target": "survive confrontation",
+        "on_screen_prompt": null,
+        "control_scheme": "unknown",
+        "input_sequence": [],
+        "success_events": [],
+        "failure_events": [],
+        "retry_behavior": "unknown",
+        "mandatory": true,
+        "source_locator": null
+      }
+    },
+    {
+      "id": "got-e1-c1-061-britt-final-lines",
+      "order": 61,
+      "phase": "farm",
+      "kind": "transcript_gap",
+      "editor_note": "Lines immediately preceding the mercy decision.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-062-britt-choice",
+      "order": 62,
+      "phase": "farm",
+      "kind": "decision",
+      "editor_note": "Gared decides whether to strike or show mercy.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "choice_menu": {
+        "timed": null,
+        "timeout_seconds": null,
+        "fully_transcribed": false,
+        "slots": [
+          {
+            "id": "got-e1-c1-britt-strike",
+            "position": 1,
+            "screen_text": null,
+            "editor_meaning": "Strike Britt",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          },
+          {
+            "id": "got-e1-c1-britt-mercy",
+            "position": 2,
+            "screen_text": null,
+            "editor_meaning": "Show mercy",
+            "branch_timeline": [],
+            "branch_flag_changes": [],
+            "verification": "pending",
+            "source_locator": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "got-e1-c1-063-aftermath",
+      "order": 63,
+      "phase": "farm",
+      "kind": "transcript_gap",
+      "editor_note": "Capture all remaining lines, movement, feedback and the end-of-chapter transition.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "missing": [
+        "all background/NPC/player lines",
+        "audio/subtitles",
+        "branch-specific narrative"
+      ],
+      "lines": []
+    },
+    {
+      "id": "got-e1-c1-064-end-chapter-1",
+      "order": 64,
+      "phase": "farm",
+      "kind": "transition",
+      "editor_note": "Hand-off to Episode 1, Chapter 2 (Ironrath); boundary should be confirmed with gameplay.",
+      "source_refs": [
+        "gamepressure-e1c1-walkthrough",
+        "telltale-fandom-iron-from-ice-transcript"
+      ],
+      "status": "pending",
+      "next_chapter_id": "got-e1-c2",
+      "text": null
+    }
+  ],
+  "completion": {
+    "spoken_lines": "pending",
+    "choice_option_text": "pending",
+    "timed_options": "pending",
+    "action_prompts": "pending",
+    "qte_input_sequences": "pending",
+    "branch_responses": "pending",
+    "sound_and_background": "pending",
+    "reviewed_by": [],
+    "missing_ranges": [
+      "entire chapter; scaffold only"
+    ],
+    "claim_full_transcript": false
+  }
+}

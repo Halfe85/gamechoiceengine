@@ -1,0 +1,440 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/Halfe85/gamechoiceengine/blob/main/database/games/got-telltale/episode-01/chapter-01.schema.json",
+  "title": "Game Choice Engine complete chapter transcript timeline (staging format)",
+  "description": "Structural scaffold. Verbatim text is null unless explicitly sourced. No implication that this file currently contains a full transcript.",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "format",
+    "game_id",
+    "episode",
+    "chapter",
+    "original_language",
+    "content_status",
+    "source_refs",
+    "phases",
+    "timeline",
+    "completion"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0.0"
+    },
+    "format": {
+      "const": "choiceengine.chapter.timeline"
+    },
+    "game_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "episode": {
+      "type": "object",
+      "required": [
+        "id",
+        "number",
+        "title"
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "required": [
+        "id",
+        "number",
+        "boundary_start",
+        "boundary_end"
+      ]
+    },
+    "original_language": {
+      "type": "string",
+      "minLength": 2
+    },
+    "content_status": {
+      "enum": [
+        "scaffold_incomplete",
+        "partially_transcribed",
+        "fully_verified"
+      ]
+    },
+    "source_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "title",
+          "url"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "phases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "order",
+          "location"
+        ]
+      }
+    },
+    "timeline": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/event"
+      }
+    },
+    "completion": {
+      "type": "object",
+      "required": [
+        "missing_ranges",
+        "claim_full_transcript"
+      ]
+    }
+  },
+  "$defs": {
+    "line": {
+      "type": "object",
+      "required": [
+        "speaker",
+        "text",
+        "language",
+        "verification",
+        "source_locator"
+      ],
+      "properties": {
+        "speaker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "language": {
+          "type": "string"
+        },
+        "delivery": {
+          "enum": [
+            "spoken",
+            "caption",
+            "subtitle",
+            "voiceover",
+            "ambient",
+            "offscreen"
+          ]
+        },
+        "verification": {
+          "enum": [
+            "pending",
+            "verified"
+          ]
+        },
+        "source_locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "branch_event": {
+      "type": "object",
+      "required": [
+        "kind",
+        "verification"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "speech",
+            "action",
+            "qte",
+            "subtitle",
+            "notification",
+            "animation",
+            "transition"
+          ]
+        },
+        "speaker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verification": {
+          "enum": [
+            "pending",
+            "verified"
+          ]
+        },
+        "source_locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "conditions": {
+          "type": "array"
+        },
+        "effects": {
+          "type": "array"
+        }
+      }
+    },
+    "menu_slot": {
+      "type": "object",
+      "required": [
+        "id",
+        "position",
+        "screen_text",
+        "branch_timeline",
+        "verification",
+        "source_locator"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "screen_text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "is_silence": {
+          "type": "boolean"
+        },
+        "editor_meaning": {
+          "type": "string"
+        },
+        "branch_timeline": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/branch_event"
+          }
+        },
+        "branch_flag_changes": {
+          "type": "array"
+        },
+        "next_event_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "verification": {
+          "enum": [
+            "pending",
+            "verified"
+          ]
+        },
+        "source_locator": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "menu": {
+      "type": "object",
+      "required": [
+        "timed",
+        "timeout_seconds",
+        "slots",
+        "fully_transcribed"
+      ],
+      "properties": {
+        "timed": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "timeout_seconds": {
+          "type": [
+            "number",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "slots": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "$ref": "#/$defs/menu_slot"
+          }
+        },
+        "fully_transcribed": {
+          "type": "boolean"
+        },
+        "missing": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "event": {
+      "type": "object",
+      "required": [
+        "id",
+        "order",
+        "phase",
+        "kind",
+        "editor_note",
+        "source_refs",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "order": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "phase": {
+          "type": "string",
+          "minLength": 1
+        },
+        "kind": {
+          "enum": [
+            "scene",
+            "speech",
+            "transcript_gap",
+            "dialogue_choice",
+            "decision",
+            "qte",
+            "action",
+            "interaction",
+            "transition",
+            "subtitle",
+            "notification",
+            "animation",
+            "examination"
+          ]
+        },
+        "editor_note": {
+          "type": "string"
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "verified"
+          ]
+        },
+        "speaker": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "text": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/line"
+          }
+        },
+        "prompt_lines": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/line"
+          }
+        },
+        "choice_menu": {
+          "$ref": "#/$defs/menu"
+        },
+        "interaction": {
+          "type": "object"
+        },
+        "next_chapter_id": {
+          "type": "string"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "enum": [
+                  "dialogue_choice",
+                  "decision"
+                ]
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "choice_menu"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "kind": {
+                "const": "speech"
+              }
+            },
+            "required": [
+              "kind"
+            ]
+          },
+          "then": {
+            "required": [
+              "text",
+              "speaker"
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

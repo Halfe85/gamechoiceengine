@@ -8,6 +8,8 @@ import json
 import sqlite3
 from pathlib import Path
 
+from validate_chapter import validate_and_publish
+
 ROOT = Path(__file__).resolve().parents[1]
 DB = ROOT / "public" / "data" / "game.sqlite"
 JSON = ROOT / "public" / "data" / "game-of-thrones.json"
@@ -200,6 +202,8 @@ def main():
     JSON.write_text(json.dumps(model, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Generated {DB.relative_to(ROOT)} and {JSON.relative_to(ROOT)}")
     print(f"Episode metadata: {len(model['episodes'])}; sample nodes: {len(model['nodes'])}")
+    staged = validate_and_publish()
+    print(f"Chapter 1 JSON timeline: {staged['events']} anchors, {staged['unresolved']} unresolved checks. Full transcript: {staged['fully_verified']}")
 
 if __name__ == "__main__":
     main()
