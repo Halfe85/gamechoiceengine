@@ -30,3 +30,29 @@ The current prototype saves manual progress in localStorage and does **not** cla
 4. Extend profiles for BG3 dice rolls, DC checks, retries and conditional quest state.
 
 Sources are listed in the generated database, and prose is editorial paraphrase rather than copyrighted script transcription.
+
+
+## Exact dialogue contract
+
+**No paraphrased/invented game dialogue.** The tracker only renders dialogue with
+`dialogue_turns.verification='verified'`, a non-empty exact on-screen
+`prompt_text`, a known source, and `exhaustive=1`, alongside every response
+from `dialogue_options` verified with an individual source. If any part is missing,
+the UI instead shows **Exact dialogue not verified**; no fake choices can be clicked.
+
+For each *actual* on-screen dialogue prompt, create one turn (or ideally a separate
+dialogue story node if it branches into unique state), in its original language and
+with the same capitalisation, punctuation, option order, and displayed silence choice.
+The dialogue choice's *on-screen label* goes in `dialogue_options.screen_text`,
+not the generic `options.label` used for non-dialogue actions.
+The character's actual **spoken response** and subsequent NPC lines may be recorded
+separately in ordered `dialogue_replies`, each requiring its own source.
+
+The initial Episode 1 dialogue placeholders are deliberately **pending**. Prior
+generic examples such as "Answer confidently" were removed instead of being
+presented as actual in-game lines. Exact textual content needs a verified,
+permitted source, such as gameplay screenshots/transcriptions supplied by the user
+or other properly licensed material. We don't bulk-copy third-party game scripts.
+
+Dialogue progress is stored per turn, independently from the node completion.
+Navigation and legacy save-state fallback remain supported.

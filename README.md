@@ -32,3 +32,11 @@ GitHub Pages is built and deployed using `.github/workflows/deploy.yml` (no Jeky
 ## Compact mobile layout and saved resume
 
 Mobile shows a single compact page at a time with no repeated headings or instructional paragraphs. Selecting a game for the first time opens the spoiler-free ending chooser; **returning to a game with a saved ending preference immediately opens its Tracker**, restoring the last saved episode, scene and event. The ending preference is stored independently per game in `gce-<game-id>-ending-preference-v1`. The position is stored in `gce-<game-id>-position-v1` using the stable event ID (with an index fallback for existing saves). Changing the ending does not reset any story decisions or progress. Browsing episodes does not overwrite the saved position unless a chapter is explicitly selected.
+
+
+## Dialogue fidelity
+
+Dialogue must be verified against the exact text shown in the game. All options
+(and any post-choice spoken replies) are separate from action summaries. No vague
+approximation is presented as a playable dialogue choice. Unverified dialogue
+is visibly marked and cannot be selected. See [database/README.md](database/README.md).

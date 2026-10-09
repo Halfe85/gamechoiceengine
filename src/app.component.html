@@ -92,28 +92,66 @@
  <button (click)="openChapters()">☷ Chapters <span aria-hidden="true">→</span></button>
 </div>
 <div class="tracker-position">
- <button (click)="previous()" [disabled]="index()===0 || !nodes().length" aria-label="Previous step">‹</button>
- <span>EP {{currentEpisode()?.number}} · {{currentScene()?.title}} · {{nodes().length?index()+1:0}}/{{nodes().length}}</span>
- <button (click)="next()" [disabled]="index()>=nodes().length-1 || !nodes().length" aria-label="Next step">›</button>
+ <button (click)="previous()" [disabled]="(index()===0 && dialogueIndex()===0) || !nodes().length" aria-label="Previous step">‹</button>
+ <span>EP {{currentEpisode()?.number}} · {{currentScene()?.title}} · {{nodes().length?index()+1:0}}/{{nodes().length}}
+  @if(activeNode()?.kind==='dialogue' && activeDialogueTurns().length>1){ · {{dialogueIndex()+1}}/{{activeDialogueTurns().length}} }
+ </span>
+ <button (click)="next()" [disabled]="(index()>=nodes().length-1 && dialogueIndex()>=activeDialogueTurns().length-1) || !nodes().length" aria-label="Next step">›</button>
 </div>
-<h2>{{activeNode()?.title || 'Chapter not mapped yet'}}</h2>
-<p class="tracker-description">{{activeNode()?.description || 'This chapter has no mapped events yet.'}}</p>
 @if(activeNode();as node){
-<div class="choice-scroll">
- @if(optionsFor(node).length){
-  @for(option of optionsFor(node);track option.id){
-   <button class="choice" [class.picked]="chosen(node)===option.id" [attr.data-tone]="goalTone(option)" (click)="pick(node,option)">
-    <span class="mark">{{chosen(node)===option.id?'✓':'◇'}}</span>
-    <span class="choice-text"><strong>{{option.label}}</strong></span>
-    @if(goalTone(option)!=='unknown'){<em>{{toneLabels[goalTone(option)]}}</em>}
-   </button>
-  }
- }@else{<button class="action-button" (click)="mark(node)">{{chosen(node)==='done'?'✓ Completed — Next':'✓ Done — Next'}}</button>}
-</div>
-<div class="tracker-foot">
- @if(chosen(node)){<span class="tracker-saved">✓ Saved</span>}
- <button class="inline-link" (click)="view.set('chronicle')">History →</button>
-</div>
+ @if(node.kind==='dialogue'){
+  <div class="dialogue-view">
+   @if(activeDialogueTurn();as turn){
+    @if(dialogueVerified()){
+     <div class="dialogue-prompt">
+      @if(turn.speaker){<span class="dialogue-speaker">{{turn.speaker}}</span>}
+      <p>{{turn.prompt_text}}</p>
+     </div>
+     <div class="choice-scroll dialogue-choice-scroll">
+      @for(option of activeDialogueOptions();track option.id){
+       <button class="choice" [class.picked]="progress()[turn.id]===option.option_id" (click)="pickDialogue(option)">
+        <span class="mark">{{progress()[turn.id]===option.option_id?'✓':'◇'}}</span>
+        <span class="choice-text"><strong>{{option.screen_text}}</strong></span>
+       </button>
+      }
+      @if(selectedDialogueOption(turn);as selected){
+       @for(reply of repliesFor(selected);track reply.id){
+        <div class="dialogue-reply">
+         @if(reply.speaker){<strong>{{reply.speaker}}</strong>}
+         <span>{{reply.spoken_text}}</span>
+        </div>
+       }
+      }
+     </div>
+    }@else{
+     <div class="dialogue-unverified" role="status">
+      <strong>Exact dialogue not verified</strong>
+      <p>The exact line and all on-screen answers must be confirmed before selection.</p>
+     </div>
+    }
+   }@else{
+    <div class="dialogue-unverified" role="status"><strong>Exact dialogue not verified</strong></div>
+   }
+  </div>
+ }@else{
+  <h2>{{node.title}}</h2>
+  <p class="tracker-description">{{node.description}}</p>
+  <div class="choice-scroll">
+   @if(optionsFor(node).length){
+    @for(option of optionsFor(node);track option.id){
+     <button class="choice" [class.picked]="chosen(node)===option.id" [attr.data-tone]="goalTone(option)" (click)="pick(node,option)">
+      <span class="mark">{{chosen(node)===option.id?'✓':'◇'}}</span>
+      <span class="choice-text"><strong>{{option.label}}</strong></span>
+      @if(goalTone(option)!=='unknown'){<em>{{toneLabels[goalTone(option)]}}</em>}
+     </button>
+    }
+   }@else{<button class="action-button" (click)="mark(node)">{{chosen(node)==='done'?'✓ Completed — Next':'✓ Done — Next'}}</button>}
+  </div>
+ }
+ <div class="tracker-foot">
+  @if(chosen(node)){<span class="tracker-saved">✓ Saved</span>}
+  <button class="inline-link" (click)="view.set('chronicle')">History →</button>
+ </div>
 }@else{<div class="empty-state"><strong>No steps available</strong></div>}
 </section>
 <aside class="panel quests"><div class="quest-header"><h2>Objectives</h2><button (click)="view.set('quests')">VIEW ALL ↗</button></div>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><i class="quest-track"><span [style.width]="questCompleted(quest)?'100%':'0%'"></span></i></span></div>}<div class="quest-summary">✦ RECORDED EVENTS <b>{{records().length}} / {{data.nodes.length}}</b></div></aside>

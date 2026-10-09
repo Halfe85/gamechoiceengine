@@ -14,13 +14,26 @@ interface Goal { id:string; game_id:string; name:string; description:string; cov
 interface Rule { id:string; goal_id:string; variable_id:string; expected_value:string; confidence:string; }
 interface Quest { id:string; game_id:string; episode_id:string|null; title:string; description:string; coverage:string; }
 interface QuestObjective { id:string; quest_id:string; title:string; variable_id:string|null; expected_value:string|null; }
+
 interface NodeQuestLink { node_id:string; objective_id:string; }
+interface DialogueTurn {
+ id:string; node_id:string; turn_index:number; speaker:string|null; prompt_text:string|null;
+ language_code:string; verification:'pending'|'verified'; source_id:string|null; exhaustive:number;
+}
+interface DialogueOption {
+ id:string; turn_id:string; option_id:string; position:number; screen_text:string;
+ language_code:string; verification:'pending'|'verified'; source_id:string|null;
+}
+interface DialogueReply {
+ id:string; dialogue_option_id:string; position:number; speaker:string|null;
+ spoken_text:string; language_code:string; verification:'pending'|'verified'; source_id:string|null;
+}
 interface Data {
  schemaVersion:number; notice:string; games:Game[]; news_items:NewsItem[]; episodes:Episode[]; scenes:Scene[];
- nodes:Node[]; options:Option[]; effects:Effect[]; goals:Goal[]; goal_rules:Rule[];
+ nodes:Node[]; options:Option[]; dialogue_turns:DialogueTurn[]; dialogue_options:DialogueOption[]; dialogue_replies:DialogueReply[]; effects:Effect[]; goals:Goal[]; goal_rules:Rule[];
  quests:Quest[]; quest_objectives:QuestObjective[]; node_quest_links:NodeQuestLink[];
 }
-interface SavedPosition { episode:string; scene:string; index:number; nodeId?:string|null; }
+interface SavedPosition { episode:string; scene:string; index:number; nodeId?:string|null; turnIndex?:number; turnId?:string|null; }
 @Component({selector:'app-root',standalone:true,templateUrl:'./app.component.html',styleUrl:'./app.component.css'})
 export class AppComponent implements OnInit {
  readonly view=signal<View>('home');
@@ -40,6 +53,7 @@ export class AppComponent implements OnInit {
  readonly sceneId=signal('got-e1-c1');
  readonly browseEpisodeId=signal('got-e1');
  readonly index=signal(0);
+ readonly dialogueIndex=signal(0);
  readonly progress=signal<Record<string,string>>({});
  readonly resetConfirm=signal(false);
  readonly savedProgressByGame=signal<Record<string,Record<string,string>>>({});
@@ -84,7 +98,29 @@ export class AppComponent implements OnInit {
  });
  readonly quests=computed(()=>this.dataset()?.quests.filter(q=>q.game_id===this.gameId()) ?? []);
  readonly nodes=computed(()=>(this.dataset()?.nodes.filter(n=>n.scene_id===this.sceneId()) ?? []).sort((a,b)=>a.position-b.position));
+
  readonly activeNode=computed(()=>this.nodes()[this.index()] ?? null);
+ readonly activeDialogueTurns=computed(()=>{
+   const node=this.activeNode();
+   return node?.kind==='dialogue'
+     ? (this.dataset()?.dialogue_turns ?? []).filter(t=>t.node_id===node.id)
+         .sort((a,b)=>a.turn_index-b.turn_index)
+     : [];
+ });
+ readonly activeDialogueTurn=computed(()=>this.activeDialogueTurns()[this.dialogueIndex()] ?? null);
+ readonly activeDialogueOptions=computed(()=>{
+   const turn=this.activeDialogueTurn();
+   return turn ? (this.dataset()?.dialogue_options ?? [])
+     .filter(o=>o.turn_id===turn.id).sort((a,b)=>a.position-b.position) : [];
+ });
+ readonly dialogueVerified=computed(()=>{
+   const turn=this.activeDialogueTurn(), items=this.activeDialogueOptions(), data=this.dataset();
+   return !!data && !!turn && turn.verification==='verified' &&
+     !!turn.source_id && !!turn.prompt_text?.trim() && turn.exhaustive===1 &&
+     items.length>0 && items.every(o=>o.verification==='verified' &&
+       !!o.source_id && !!o.screen_text.trim() &&
+       data.options.some(engineOption=>engineOption.id===o.option_id&&engineOption.node_id===turn.node_id));
+ });
  readonly currentEpisode=computed(()=>this.episodes().find(e=>e.id===this.episodeId()));
  readonly currentScene=computed(()=>this.chapters().find(s=>s.id===this.sceneId()));
  readonly completed=computed(()=>this.nodes().filter(n=>!!this.progress()[n.id]).length);
@@ -158,6 +194,7 @@ export class AppComponent implements OnInit {
    this.episodeId.set(episode);
    this.sceneId.set(id);
    this.index.set(0);
+   this.dialogueIndex.set(0);
    this.savePosition();
    this.openTracker();
  }
@@ -204,8 +241,42 @@ export class AppComponent implements OnInit {
    const storedIndex=position&&Number.isInteger(position.index)?position.index:0;
    const resumeIndex=storedNodeIndex>=0?storedNodeIndex:storedIndex;
    this.index.set(Math.max(0,Math.min(sceneNodes.length-1,resumeIndex)));
+   const currentNode=sceneNodes[this.index()];
+   const turns=currentNode?.kind==='dialogue'
+     ? (d.dialogue_turns ?? []).filter(t=>t.node_id===currentNode.id).sort((a,b)=>a.turn_index-b.turn_index)
+     : [];
+   const storedTurnIndex=position?.turnId?turns.findIndex(turn=>turn.id===position?.turnId):-1;
+   const fallbackTurn=position&&Number.isInteger(position.turnIndex)?position.turnIndex:0;
+   this.dialogueIndex.set(Math.max(0,Math.min(turns.length-1,storedTurnIndex>=0?storedTurnIndex:fallbackTurn)));
  }
- optionsFor(node:Node):Option[]{return this.dataset()?.options.filter(o=>o.node_id===node.id).sort((a,b)=>a.position-b.position)??[];}
+
+ optionsFor(node:Node):Option[]{
+   if(node.kind==='dialogue')return [];
+   return this.dataset()?.options.filter(o=>o.node_id===node.id).sort((a,b)=>a.position-b.position)??[];
+ }
+ repliesFor(option:DialogueOption):DialogueReply[]{
+   return (this.dataset()?.dialogue_replies ?? [])
+     .filter(r=>r.dialogue_option_id===option.id && r.verification==='verified' && !!r.source_id)
+     .sort((a,b)=>a.position-b.position);
+ }
+ selectedDialogueOption(turn:DialogueTurn):DialogueOption|null{
+   const selected=this.progress()[turn.id];
+   return this.dataset()?.dialogue_options.find(o=>o.turn_id===turn.id && o.option_id===selected &&
+     o.verification==='verified' && !!o.source_id) ?? null;
+ }
+ pickDialogue(option:DialogueOption){
+   const node=this.activeNode(), turn=this.activeDialogueTurn();
+   if(!node||!turn||!this.dialogueVerified()||option.turn_id!==turn.id)return;
+   if(!this.activeDialogueOptions().some(o=>o.id===option.id))return;
+   this.progress.update(progress=>{
+     const updated={...progress,[turn.id]:option.option_id};
+     const allTurns=this.activeDialogueTurns();
+     if(allTurns.length>0 && allTurns.every(t=>!!updated[t.id]))updated[node.id]='done';
+     return updated;
+   });
+   this.saveProgress();
+   this.next();
+ }
  goalTone(option:Option):Tone{
    const d=this.dataset();if(!d)return 'unknown';
    const goal=this.mappedGoal();if(!goal)return 'unknown';
@@ -222,10 +293,36 @@ export class AppComponent implements OnInit {
  chosen(node:Node):string{return this.progress()[node.id]??'';}
  pick(node:Node,option:Option){this.progress.update(p=>({...p,[node.id]:option.id}));this.saveProgress();this.next();}
  mark(node:Node){this.progress.update(p=>({...p,[node.id]:'done'}));this.saveProgress();this.next();}
- next(){this.index.update(i=>Math.min(this.nodes().length-1,i+1));this.savePosition();}
- previous(){this.index.update(i=>Math.max(0,i-1));this.savePosition();}
+
+ next(){
+   if(this.activeNode()?.kind==='dialogue' && this.dialogueIndex()<this.activeDialogueTurns().length-1){
+     this.dialogueIndex.update(i=>i+1);
+   }else{
+     this.index.update(i=>Math.min(this.nodes().length-1,i+1));
+     this.dialogueIndex.set(0);
+   }
+   this.savePosition();
+ }
+ previous(){
+   if(this.activeNode()?.kind==='dialogue' && this.dialogueIndex()>0){
+     this.dialogueIndex.update(i=>i-1);
+   }else{
+     this.index.update(i=>Math.max(0,i-1));
+     const node=this.activeNode();
+     const turns=node?.kind==='dialogue'
+       ? (this.dataset()?.dialogue_turns ?? []).filter(t=>t.node_id===node.id):[];
+     this.dialogueIndex.set(Math.max(0,turns.length-1));
+   }
+   this.savePosition();
+ }
  labelFor(node:Node):string{
    const id=this.chosen(node);
+   if(node.kind==='dialogue'){
+     return (this.dataset()?.dialogue_turns ?? []).filter(t=>t.node_id===node.id)
+       .sort((a,b)=>a.turn_index-b.turn_index)
+       .map(t=>this.selectedDialogueOption(t)?.screen_text)
+       .filter((label):label is string=>!!label).join(' · ') || 'Dialogue not transcribed';
+   }
    if(id==='done')return 'Completed';
    return this.dataset()?.options.find(o=>o.id===id)?.label ?? '';
  }
@@ -239,7 +336,7 @@ export class AppComponent implements OnInit {
  }
  reset(){
    if(!this.resetConfirm()){this.resetConfirm.set(true);return;}
-   this.progress.set({});this.index.set(0);this.resetConfirm.set(false);this.saveProgress();this.savePosition();
+   this.progress.set({});this.index.set(0);this.dialogueIndex.set(0);this.resetConfirm.set(false);this.saveProgress();this.savePosition();
  }
  cancelReset(){this.resetConfirm.set(false);}
  private saveProgress(){
@@ -250,7 +347,8 @@ export class AppComponent implements OnInit {
  private savePosition(){
    const position:SavedPosition={
      episode:this.episodeId(),scene:this.sceneId(),index:this.index(),
-     nodeId:this.activeNode()?.id ?? null
+     nodeId:this.activeNode()?.id ?? null,
+     turnIndex:this.dialogueIndex(),turnId:this.activeDialogueTurn()?.id ?? null
    };
    try{localStorage.setItem('gce-'+this.gameId()+'-position-v1',JSON.stringify(position));}catch{}
  }

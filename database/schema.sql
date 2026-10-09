@@ -85,11 +85,49 @@ CREATE INDEX idx_scenes_episode ON scenes(episode_id,number);
 
 
 -- Extensions for true branching stories. Not all tables are populated by the initial seed.
+-- A dialogue node may contain multiple actual on-screen prompts, each with
+-- its own independent options and saved selection. Pending turns have no text.
 CREATE TABLE dialogue_turns (
-  id TEXT PRIMARY KEY, node_id TEXT NOT NULL REFERENCES nodes(id),
-  turn_index INTEGER NOT NULL, speaker TEXT, paraphrase TEXT NOT NULL,
+  id TEXT PRIMARY KEY,
+  node_id TEXT NOT NULL REFERENCES nodes(id),
+  turn_index INTEGER NOT NULL,
+  speaker TEXT,
+  prompt_text TEXT,
+  language_code TEXT NOT NULL DEFAULT 'en',
+  verification TEXT NOT NULL DEFAULT 'pending' CHECK(verification IN ('pending','verified')),
+  source_id TEXT REFERENCES sources(id),
   exhaustive INTEGER NOT NULL DEFAULT 0 CHECK(exhaustive IN (0,1)),
-  UNIQUE(node_id,turn_index)
+  UNIQUE(node_id,turn_index),
+  CHECK (verification='pending' OR
+         (prompt_text IS NOT NULL AND length(trim(prompt_text))>0
+          AND source_id IS NOT NULL AND exhaustive=1))
+);
+-- On-screen option text is distinct from a game's effect/transition option.
+-- Never display options.label as if it were an exact dialogue subtitle.
+CREATE TABLE dialogue_options (
+  id TEXT PRIMARY KEY,
+  turn_id TEXT NOT NULL REFERENCES dialogue_turns(id),
+  option_id TEXT NOT NULL REFERENCES options(id),
+  position INTEGER NOT NULL,
+  screen_text TEXT NOT NULL CHECK(length(trim(screen_text))>0),
+  language_code TEXT NOT NULL DEFAULT 'en',
+  verification TEXT NOT NULL CHECK(verification IN ('pending','verified')),
+  source_id TEXT REFERENCES sources(id),
+  UNIQUE(turn_id,position), UNIQUE(turn_id,option_id),
+  CHECK(verification='pending' OR source_id IS NOT NULL)
+);
+-- Optional exact dialogue spoken *after* the player selects that option.
+CREATE TABLE dialogue_replies (
+  id TEXT PRIMARY KEY,
+  dialogue_option_id TEXT NOT NULL REFERENCES dialogue_options(id),
+  position INTEGER NOT NULL,
+  speaker TEXT,
+  spoken_text TEXT NOT NULL CHECK(length(trim(spoken_text))>0),
+  language_code TEXT NOT NULL DEFAULT 'en',
+  verification TEXT NOT NULL CHECK(verification IN ('pending','verified')),
+  source_id TEXT REFERENCES sources(id),
+  UNIQUE(dialogue_option_id,position),
+  CHECK(verification='pending' OR source_id IS NOT NULL)
 );
 CREATE TABLE condition_groups (
   id TEXT PRIMARY KEY, game_id TEXT NOT NULL REFERENCES games(id),
@@ -117,6 +155,8 @@ CREATE TABLE mechanic_checks (
   failure_option_id TEXT REFERENCES options(id)
 );
 CREATE INDEX idx_turns_node ON dialogue_turns(node_id,turn_index);
+CREATE INDEX idx_dialogue_options_turn ON dialogue_options(turn_id,position);
+CREATE INDEX idx_dialogue_replies_option ON dialogue_replies(dialogue_option_id,position);
 CREATE INDEX idx_edges_source ON event_transitions(from_node_id,priority);
 CREATE INDEX idx_conditions_group ON condition_terms(group_id);
 

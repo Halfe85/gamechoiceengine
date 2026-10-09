@@ -78,17 +78,12 @@ def make_database(db):
                entity_type="node", entity_id=f"got-e1-{key}",
                note="Editorial paraphrase from a public walkthrough.")
 
+    # Dialogue is not approximated: do NOT seed invented reply labels.
+    # Real dialogue choices enter via dialogue_turns + dialogue_options
+    # after checking the actual in-game wording, order and language.
     choices = [
-        ("camp-talk", [("agree", "Answer confidently", "say"), ("question", "Ask a question", "say"),
-                        ("sharp", "Make a sharp remark", "say"), ("silent", "Remain silent", "silent")]),
-        ("lord", [("loyal", "Promise loyal service", "say"), ("ask", "Ask what is expected", "say"),
-                  ("silent", "Remain silent", "silent")]),
-        ("bowen", [("kind", "Be friendly", "say"), ("direct", "Be direct", "say"),
-                   ("silent", "Remain silent", "silent")]),
         ("alarm", [("warn", "Warn Lord Forrester", "do"), ("save", "Save Bowen", "do")]),
         ("escape", [("complete", "QTE completed", "success"), ("failed", "QTE failed / retried", "failure")]),
-        ("forest", [("promise", "Give your word", "say"), ("ask", "Ask for clarification", "say"),
-                    ("silent", "Remain silent", "silent")]),
         ("farm", [("sword", "Draw your sword", "do"), ("father", "Rush to your father", "do")]),
         ("britt", [("mercy", "Show mercy", "do"), ("strike", "Strike the attacker", "do")]),
     ]
@@ -138,15 +133,12 @@ def make_database(db):
                    from_node_id=f"got-e1-{source}", via_option_id=None,
                    to_node_id=f"got-e1-{target}", condition_group_id=None,
                    priority=0, verification="unknown")
-    insert(db, "dialogue_turns", id="turn-camp-talk", node_id="got-e1-camp-talk",
-           turn_index=1, speaker="Camp soldiers",
-           paraphrase="Opening conversation at the Forrester camp.", exhaustive=0)
-    insert(db, "dialogue_turns", id="turn-lord", node_id="got-e1-lord",
-           turn_index=1, speaker="Lord Forrester",
-           paraphrase="An exchange about Gared's responsibilities.", exhaustive=0)
-    insert(db, "dialogue_turns", id="turn-bowen", node_id="got-e1-bowen",
-           turn_index=1, speaker="Bowen",
-           paraphrase="A series of exchanges while assisting in camp.", exhaustive=0)
+    # Explicitly pending; NEVER interpret a scene synopsis as a spoken line.
+    for node_key in ("camp-talk", "lord", "bowen", "forest"):
+        insert(db, "dialogue_turns", id="turn-"+node_key,
+               node_id="got-e1-"+node_key, turn_index=1,
+               speaker=None, prompt_text=None, language_code="en",
+               verification="pending", source_id=None, exhaustive=0)
     insert(db, "mechanic_checks", id="qte-escape", node_id="got-e1-escape",
            mechanic_key="telltale.quick_time",
            config_json=json.dumps({"input":"follow game prompt","duration":"game-defined","outcome_recording":"manual"}),
@@ -186,6 +178,8 @@ def main():
             "node_quest_links": as_rows(db, "node_quest_links"),
             "sources": as_rows(db, "sources"),
             "dialogue_turns": as_rows(db, "dialogue_turns"),
+            "dialogue_options": as_rows(db, "dialogue_options"),
+            "dialogue_replies": as_rows(db, "dialogue_replies"),
             "condition_groups": as_rows(db, "condition_groups"),
             "condition_terms": as_rows(db, "condition_terms"),
             "event_transitions": as_rows(db, "event_transitions"),
