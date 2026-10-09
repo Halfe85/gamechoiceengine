@@ -82,3 +82,40 @@ CREATE INDEX idx_options_node ON options(node_id,position);
 CREATE INDEX idx_effects_option ON effects(option_id);
 CREATE INDEX idx_rules_goal ON goal_rules(goal_id);
 CREATE INDEX idx_scenes_episode ON scenes(episode_id,number);
+
+
+-- Extensions for true branching stories. Not all tables are populated by the initial seed.
+CREATE TABLE dialogue_turns (
+  id TEXT PRIMARY KEY, node_id TEXT NOT NULL REFERENCES nodes(id),
+  turn_index INTEGER NOT NULL, speaker TEXT, paraphrase TEXT NOT NULL,
+  exhaustive INTEGER NOT NULL DEFAULT 0 CHECK(exhaustive IN (0,1)),
+  UNIQUE(node_id,turn_index)
+);
+CREATE TABLE condition_groups (
+  id TEXT PRIMARY KEY, game_id TEXT NOT NULL REFERENCES games(id),
+  logic TEXT NOT NULL CHECK(logic IN ('all','any'))
+);
+CREATE TABLE condition_terms (
+  id TEXT PRIMARY KEY, group_id TEXT NOT NULL REFERENCES condition_groups(id),
+  variable_id TEXT NOT NULL REFERENCES variables(id),
+  comparison TEXT NOT NULL CHECK(comparison IN ('eq','neq','gt','gte','lt','lte','exists')),
+  expected_value TEXT
+);
+CREATE TABLE event_transitions (
+  id TEXT PRIMARY KEY,
+  from_node_id TEXT NOT NULL REFERENCES nodes(id),
+  via_option_id TEXT REFERENCES options(id),
+  to_node_id TEXT NOT NULL REFERENCES nodes(id),
+  condition_group_id TEXT REFERENCES condition_groups(id),
+  priority INTEGER NOT NULL DEFAULT 0,
+  verification TEXT NOT NULL CHECK(verification IN ('verified','inferred','unknown'))
+);
+CREATE TABLE mechanic_checks (
+  id TEXT PRIMARY KEY, node_id TEXT NOT NULL REFERENCES nodes(id),
+  mechanic_key TEXT NOT NULL, config_json TEXT NOT NULL CHECK(json_valid(config_json)),
+  success_option_id TEXT REFERENCES options(id),
+  failure_option_id TEXT REFERENCES options(id)
+);
+CREATE INDEX idx_turns_node ON dialogue_turns(node_id,turn_index);
+CREATE INDEX idx_edges_source ON event_transitions(from_node_id,priority);
+CREATE INDEX idx_conditions_group ON condition_terms(group_id);

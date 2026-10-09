@@ -107,6 +107,38 @@ def make_database(db):
     insert(db, "quest_objectives", id="warning-choice", quest_id="survive-attack", position=1,
            title="Resolve the urgent choice", variable_id="bowen_alive", expected_value=None)
     insert(db, "node_quest_links", node_id="got-e1-alarm", objective_id="warning-choice")
+    # Sample event graph links: the first chapter is linear at this level.
+    # Conditional branches may reference condition groups and skip/insert nodes.
+    sequence = [key for key, *_ in nodes]
+    option_lookup = dict(choices)
+    for source, target in zip(sequence, sequence[1:]):
+        outcomes = option_lookup.get(source)
+        if outcomes:
+            for key, _, _ in outcomes:
+                insert(db, "event_transitions", id=f"edge-{source}-{key}",
+                       from_node_id=f"got-e1-{source}",
+                       via_option_id=f"got-e1-{source}-{key}",
+                       to_node_id=f"got-e1-{target}",
+                       condition_group_id=None, priority=0, verification="unknown")
+        else:
+            insert(db, "event_transitions", id=f"edge-{source}-auto",
+                   from_node_id=f"got-e1-{source}", via_option_id=None,
+                   to_node_id=f"got-e1-{target}", condition_group_id=None,
+                   priority=0, verification="unknown")
+    insert(db, "dialogue_turns", id="turn-camp-talk", node_id="got-e1-camp-talk",
+           turn_index=1, speaker="Camp soldiers",
+           paraphrase="Opening conversation at the Forrester camp.", exhaustive=0)
+    insert(db, "dialogue_turns", id="turn-lord", node_id="got-e1-lord",
+           turn_index=1, speaker="Lord Forrester",
+           paraphrase="An exchange about Gared's responsibilities.", exhaustive=0)
+    insert(db, "dialogue_turns", id="turn-bowen", node_id="got-e1-bowen",
+           turn_index=1, speaker="Bowen",
+           paraphrase="A series of exchanges while assisting in camp.", exhaustive=0)
+    insert(db, "mechanic_checks", id="qte-escape", node_id="got-e1-escape",
+           mechanic_key="telltale.quick_time",
+           config_json=json.dumps({"input":"follow game prompt","duration":"game-defined","outcome_recording":"manual"}),
+           success_option_id="got-e1-escape-complete",
+           failure_option_id="got-e1-escape-failed")
     db.commit()
     errors = db.execute("PRAGMA foreign_key_check").fetchall()
     if errors:
@@ -138,7 +170,12 @@ def main():
             "quests": as_rows(db, "quests"),
             "quest_objectives": as_rows(db, "quest_objectives"),
             "node_quest_links": as_rows(db, "node_quest_links"),
-            "sources": as_rows(db, "sources")
+            "sources": as_rows(db, "sources"),
+            "dialogue_turns": as_rows(db, "dialogue_turns"),
+            "condition_groups": as_rows(db, "condition_groups"),
+            "condition_terms": as_rows(db, "condition_terms"),
+            "event_transitions": as_rows(db, "event_transitions"),
+            "mechanic_checks": as_rows(db, "mechanic_checks")
         }
     JSON.write_text(json.dumps(model, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     print(f"Generated {DB.relative_to(ROOT)} and {JSON.relative_to(ROOT)}")
