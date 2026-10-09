@@ -1,25 +1,46 @@
 <div class="main-window">
 <header class="top-bar"><div class="brand"><span class="sigil">✦</span><div><strong>CHOICE<span>ENGINE</span></strong><small>YOUR STORY, YOUR DESTINY</small></div></div><div class="prototype">MULTI-GAME · ALPHA</div></header>
-<main class="content"><div class="page-title"><div class="eyebrow">◆ THE ADVENTURER'S COMPANION ◆</div><h1>{{view()==='home'?'Home':view()==='journey'?'Story Tracker':view()==='quests'?'Quest Ledger':'Chronicle'}}</h1><div class="ornament">━━━━ ✧ ━━━━</div></div>
+<main class="content"><div class="page-title"><div class="eyebrow">◆ THE ADVENTURER'S COMPANION ◆</div><h1>{{view()==='home'?'Home':view()==='games'?'Games':view()==='journey'?'Story Tracker':view()==='quests'?'Quest Ledger':'Chronicle'}}</h1><div class="ornament">━━━━ ✧ ━━━━</div></div>
 @if(loading()){<section class="panel expanded"><h2>Opening the game library...</h2><p>Loading the game catalog.</p></section>}
 @else if(error()){<section class="panel expanded"><h2>Unable to load story</h2><p>{{error()}}</p><p>Verify that the database build produced public/data/game-of-thrones.json.</p></section>}
 @else if(dataset();as data){
 @if(view()==='home'){
-<section class="panel expanded home-panel">
-<div class="overline">CHOOSE YOUR ADVENTURE</div>
-<h2>Game Library</h2>
-<p>Select a game to open its story tracker, quests and saved choices.</p>
-<div class="games-grid">
-@for(game of data.games;track game.id){
-<button class="game-card" (click)="selectGame(game.id)" [attr.aria-label]="'Open '+game.title">
-  <span class="game-card-top"><span class="game-avatar">{{game.adapter==='telltale'?'♜':'⚔'}}</span><span class="game-status" [class.planned]="!hasEpisodes(game.id)">{{hasEpisodes(game.id)?'IN DEVELOPMENT':'PLANNED'}}</span></span>
-  <strong>{{game.title}}</strong>
-  <small>{{game.developer}}</small>
-  <p>{{game.description}}</p>
-  <span class="game-card-bottom"><span>{{hasEpisodes(game.id)?episodeCount(game.id)+' EPISODES INDEXED':'STORY DATA PENDING'}}</span><span>OPEN →</span></span>
-</button>
-}@empty{<p>No games have been registered yet.</p>}
-</div>
+<section class="panel expanded home-panel news-panel">
+  <div class="overline">THE LATEST FROM CHOICE ENGINE</div>
+  <h2>News Feed</h2>
+  <p class="news-intro">New games added to the collection and updates to their story trackers.</p>
+  <div class="news-list">
+    @for(item of news();track item.id){
+      <article class="news-entry">
+        <div class="news-meta"><span class="news-type">{{item.kind==='game_added'?'NEW GAME':'UPDATE'}}</span><time [attr.datetime]="item.published_on">{{item.published_on}}</time></div>
+        <h3>{{item.title}}</h3>
+        <p>{{item.description}}</p>
+        @if(item.game_id){<button class="news-action" (click)="selectGame(item.game_id)">View game <span aria-hidden="true">→</span></button>}
+      </article>
+    }@empty{<p class="news-empty">No news has been published yet.</p>}
+  </div>
+</section>
+}
+@else if(view()==='games'){
+<section class="panel expanded games-panel">
+  <div class="overline">YOUR STORY COLLECTION</div>
+  <h2>Games</h2>
+  <p class="games-help">Select a game to open its tracker. Completion is based on the story steps mapped so far.</p>
+  <div class="games-list">
+    @for(game of games();track game.id){
+      <button class="game-row" (click)="selectGame(game.id)" [attr.aria-label]="'Open '+game.title+(gameProgress()[game.id] !== undefined ? ', '+gameProgress()[game.id]+'% of mapped steps completed' : '')">
+        <span class="game-row-icon" aria-hidden="true">{{game.adapter==='telltale'?'♜':'⚔'}}</span>
+        <span class="game-row-title">{{game.title}}</span>
+        @if(gameProgress()[game.id] !== undefined){
+          <span class="game-row-progress" [attr.title]="gameProgress()[game.id]+'% of mapped story steps recorded (not full-game completion)'">
+            <span class="game-row-track" aria-hidden="true"><span [style.width.%]="gameProgress()[game.id]"></span></span>
+            <strong>{{gameProgress()[game.id]}}%</strong>
+          </span>
+        }
+        <span class="game-row-chevron" aria-hidden="true">›</span>
+      </button>
+    }@empty{<p>No games have been registered yet.</p>}
+  </div>
 </section>
 }
 @else if(view()==='journey'){
@@ -42,7 +63,7 @@
   <div class="overline">GAME SELECTED</div>
   <h2>{{currentGame()?.title}}</h2>
   <p>This game is registered, but no episodes, choices or quests have been mapped yet.</p>
-  <button class="back-home" (click)="view.set('home')">← Back to Home</button>
+  <button class="back-home" (click)="view.set('games')">← Back to Games</button>
 </section>
 }
 }
@@ -50,4 +71,4 @@
 @else if(view()==='chronicle'){<section class="panel expanded"><div class="overline">YOUR STORY SO FAR</div><h2>Chronicle</h2><p>Recorded events stay on this device in local prototype storage.</p><div class="journal-list">@for(node of records();track node.id){<div class="journal"><div class="eyebrow">{{node.kind.toUpperCase()}}</div><h3>{{node.title}}</h3><p>{{labelFor(node)}}</p></div>}@empty{<div class="journal">No events recorded. Open the Story Tracker to begin.</div>}</div><div class="reset-row">@if(resetConfirm()){<span>Erase all local demo progress?</span><button class="danger-button" (click)="reset()">Confirm reset</button><button (click)="cancelReset()">Cancel</button>}@else{<button (click)="reset()">Reset local progress</button>}</div><button class="back-home" (click)="view.set('journey')">← Back to Tracker</button></section>}
 }
 </main>
-<footer class="bottom-bar"><nav aria-label="Main navigation"><button class="home-nav" [class.active]="view()==='home'" (click)="view.set('home')"><span>⌂</span>HOME</button><button [class.active]="view()==='journey'||view()==='chronicle'" (click)="view.set('journey')"><span>⌖</span>TRACKER</button><button [class.active]="view()==='quests'" (click)="view.set('quests')"><span>☷</span>QUESTS</button><div class="save">● LOCAL DEMO SAVE</div></nav></footer></div>
+<footer class="bottom-bar"><nav aria-label="Main navigation"><button class="home-nav" [class.active]="view()==='home'" (click)="view.set('home')"><span>⌂</span>HOME</button><button [class.active]="view()==='games'" (click)="view.set('games')"><span>▦</span>GAMES</button><button [class.active]="view()==='journey'||view()==='chronicle'" (click)="view.set('journey')"><span>⌖</span>TRACKER</button><button [class.active]="view()==='quests'" (click)="view.set('quests')"><span>☷</span>QUESTS</button><div class="save">● LOCAL DEMO SAVE</div></nav></footer></div>

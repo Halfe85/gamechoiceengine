@@ -1,8 +1,9 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 
-type View = 'home' | 'journey' | 'quests' | 'chronicle';
+type View = 'home' | 'games' | 'journey' | 'quests' | 'chronicle';
 type Tone = 'supports' | 'conflicts' | 'unknown';
 interface Game { id:string; title:string; developer:string; adapter:string; description:string; }
+interface NewsItem { id:string; game_id:string|null; kind:string; title:string; description:string; published_on:string; sort_order:number; }
 interface Episode { id:string; game_id:string; number:number; title:string; coverage:string; }
 interface Scene { id:string; episode_id:string; number:number; title:string; protagonist:string|null; coverage:string; }
 interface Node { id:string; scene_id:string; position:number; kind:string; title:string; description:string; coverage:string; spoiler_level:number; }
@@ -14,7 +15,7 @@ interface Quest { id:string; game_id:string; episode_id:string|null; title:strin
 interface QuestObjective { id:string; quest_id:string; title:string; variable_id:string|null; expected_value:string|null; }
 interface NodeQuestLink { node_id:string; objective_id:string; }
 interface Data {
- schemaVersion:number; notice:string; games:Game[]; episodes:Episode[]; scenes:Scene[];
+ schemaVersion:number; notice:string; games:Game[]; news_items:NewsItem[]; episodes:Episode[]; scenes:Scene[];
  nodes:Node[]; options:Option[]; effects:Effect[]; goals:Goal[]; goal_rules:Rule[];
  quests:Quest[]; quest_objectives:QuestObjective[]; node_quest_links:NodeQuestLink[];
 }
@@ -32,7 +33,33 @@ export class AppComponent implements OnInit {
  readonly index=signal(0);
  readonly progress=signal<Record<string,string>>({});
  readonly resetConfirm=signal(false);
+ readonly savedProgressByGame=signal<Record<string,Record<string,string>>>({});
  readonly games=computed(()=>this.dataset()?.games ?? []);
+ readonly news=computed(()=>[...(this.dataset()?.news_items ?? [])].sort((a,b)=>b.sort_order-a.sort_order));
+ // Percentages measure recorded events within the currently mapped story data.
+ // Games without recorded steps deliberately have no percentage at all.
+ readonly gameProgress=computed(()=>{
+   const data=this.dataset();
+   const saves=this.savedProgressByGame();
+   const result:Record<string,number>={};
+   if(!data)return result;
+   for(const game of data.games){
+     const episodes=new Set(data.episodes.filter(e=>e.game_id===game.id).map(e=>e.id));
+     const scenes=new Set(data.scenes.filter(s=>episodes.has(s.episode_id)).map(s=>s.id));
+     const nodes=data.nodes.filter(n=>scenes.has(n.scene_id));
+     if(!nodes.length)continue;
+     const recorded=saves[game.id] ?? {};
+     const count=nodes.filter(n=>{
+       const choice=recorded[n.id];
+       return typeof choice==='string' && (
+         choice==='done' ||
+         data.options.some(o=>o.node_id===n.id && o.id===choice)
+       );
+     }).length;
+     if(count>0)result[game.id]=Math.round(count/nodes.length*100);
+   }
+   return result;
+ });
  readonly currentGame=computed(()=>this.games().find(g=>g.id===this.gameId()) ?? null);
  readonly chapters=computed(()=>this.dataset()?.scenes.filter(s=>s.episode_id===this.episodeId()) ?? []);
  readonly episodes=computed(()=>this.dataset()?.episodes.filter(e=>e.game_id===this.gameId()) ?? []);
@@ -65,11 +92,31 @@ export class AppComponent implements OnInit {
      const data=await response.json() as Data;
      if(data.schemaVersion!==1)throw new Error('Unsupported game database version');
      this.dataset.set(data);
+     this.loadAllSavedProgress(data);
      const initialGame=data.games.some(g=>g.id===this.gameId())?this.gameId():data.games[0]?.id ?? '';
      this.gameId.set(initialGame);
      this.loadForGame(initialGame);
    }catch(err){this.error.set(err instanceof Error?err.message:String(err));}
    finally{this.loading.set(false);}
+ }
+ private loadAllSavedProgress(data:Data){
+   const cache:Record<string,Record<string,string>>={};
+   for(const game of data.games){
+     try{
+       const raw=localStorage.getItem('gce-'+game.id+'-progress-v1') ??
+         (game.id==='got-telltale'?localStorage.getItem('gce-got-progress-v1'):null);
+       if(!raw)continue;
+       const parsed:unknown=JSON.parse(raw);
+       if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed)){
+         const valid:Record<string,string>={};
+         for(const [id,value] of Object.entries(parsed)){
+           if(typeof value==='string')valid[id]=value;
+         }
+         cache[game.id]=valid;
+       }
+     }catch{/* A corrupted or unavailable save must not block other games. */}
+   }
+   this.savedProgressByGame.set(cache);
  }
  episodeCount(gameId:string):number{return this.dataset()?.episodes.filter(e=>e.game_id===gameId).length??0;}
  hasEpisodes(gameId:string):boolean{return this.episodeCount(gameId)>0;}
@@ -155,6 +202,10 @@ export class AppComponent implements OnInit {
    this.progress.set({});this.index.set(0);this.resetConfirm.set(false);this.saveProgress();this.savePosition();
  }
  cancelReset(){this.resetConfirm.set(false);}
- private saveProgress(){try{localStorage.setItem('gce-'+this.gameId()+'-progress-v1',JSON.stringify(this.progress()));}catch{}}
+ private saveProgress(){
+   const latest=this.progress();
+   this.savedProgressByGame.update(old=>({...old,[this.gameId()]:latest}));
+   try{localStorage.setItem('gce-'+this.gameId()+'-progress-v1',JSON.stringify(latest));}catch{}
+ }
  private savePosition(){try{localStorage.setItem('gce-'+this.gameId()+'-position-v1',JSON.stringify({episode:this.episodeId(),scene:this.sceneId(),index:this.index()}));}catch{}}
 }

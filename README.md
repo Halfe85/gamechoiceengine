@@ -2,7 +2,7 @@
 
 Mobile-first Angular companion for story-driven games: **dialogue, actions, choices, QTEs, quest objectives, player state and goal-aware routes**.
 
-The Home screen replaces the bottom-bar Journal entry and lists games registered in the content database. Decision history remains available from the Story Tracker, not as a separate bottom tab. **Game of Thrones: A Telltale Games Series** has six episodes indexed, with a **partial** sample for episode 1 chapter 1. **Baldur's Gate 3** is registered as a planned game with no story content yet. This is an alpha, not a complete walkthrough.
+The **Home** screen is an internal news feed (new games and story-content updates) backed by SQLite `news_items`. The separate **Games** tab immediately to its right lists registered games in compact single-line rows. A progress bar and percentage appear only after a player records at least one choice or action; the percentage is computed against **currently mapped story steps**, not the whole game, because content coverage is incomplete. Decision history remains available from the Story Tracker, not as a separate bottom tab. **Game of Thrones: A Telltale Games Series** has six episodes indexed, with a **partial** sample for episode 1 chapter 1. **Baldur's Gate 3** is registered as a planned game with no story content yet. This is an alpha, not a complete walkthrough.
 
 ## Develop locally
 

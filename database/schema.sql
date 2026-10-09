@@ -119,3 +119,15 @@ CREATE TABLE mechanic_checks (
 CREATE INDEX idx_turns_node ON dialogue_turns(node_id,turn_index);
 CREATE INDEX idx_edges_source ON event_transitions(from_node_id,priority);
 CREATE INDEX idx_conditions_group ON condition_terms(group_id);
+
+-- Publishing feed for the Home screen; sort_order determines newest first.
+CREATE TABLE news_items (
+  id TEXT PRIMARY KEY,
+  game_id TEXT REFERENCES games(id),
+  kind TEXT NOT NULL CHECK(kind IN ('game_added','content_update','announcement')),
+  title TEXT NOT NULL,
+  description TEXT NOT NULL,
+  published_on TEXT NOT NULL,
+  sort_order INTEGER NOT NULL UNIQUE
+);
+CREATE INDEX idx_news_order ON news_items(sort_order DESC);

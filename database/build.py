@@ -31,6 +31,15 @@ def make_database(db):
     insert(db, "games", id="baldurs-gate-3", title="Baldur's Gate 3",
            developer="Larian Studios", adapter="bg3",
            description="Party-based fantasy RPG with dialogue, quests and dice checks. Story mapping is planned.")
+    # Internal catalog activity, not external video-game release news.
+    insert(db, "news_items", id="catalog-got", game_id="got-telltale",
+           kind="game_added", title="Game of Thrones joins Choice Engine",
+           description="The six-episode season is listed. A partial tracker for Episode 1, Chapter 1 is available for testing.",
+           published_on="2026-10-09", sort_order=1)
+    insert(db, "news_items", id="catalog-bg3", game_id="baldurs-gate-3",
+           kind="game_added", title="Baldur's Gate 3 added to the collection",
+           description="The game is listed for future quest, dialogue and dice-check tracking. Story content is not yet available.",
+           published_on="2026-10-09", sort_order=2)
     for number, name in enumerate(EPISODES, start=1):
         insert(db, "episodes", id=f"got-e{number}", game_id="got-telltale",
                number=number, title=name, coverage="partial" if number == 1 else "metadata")
@@ -163,6 +172,7 @@ def main():
             "schemaVersion": 1,
             "notice": "Partial, sourced companion dataset; no claim of complete gameplay coverage.",
             "games": as_rows(db, "games"),
+            "news_items": as_rows(db, "news_items"),
             "episodes": as_rows(db, "episodes"),
             "scenes": as_rows(db, "scenes"),
             "nodes": as_rows(db, "nodes"),

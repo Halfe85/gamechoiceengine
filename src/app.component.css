@@ -75,3 +75,41 @@
   .bottom-bar nav button{flex:0 0 85px}
   .bottom-bar nav .home-nav{margin-left:0}
 }
+
+/* Home is now an internal news feed. Games is a compact, vertically stacked list. */
+.news-panel,.games-panel{max-width:900px;overflow-y:auto;scrollbar-width:thin}
+.news-panel>.overline,.games-panel>.overline{margin-bottom:9px}
+.news-panel>h2,.games-panel>h2{margin-bottom:4px}
+.news-intro,.games-help{color:#8b775d;font-size:12px;line-height:1.55;margin:6px 0 18px!important}
+.news-list,.games-list{display:flex;flex-direction:column;min-width:0}
+.news-entry{border:1px solid #e1d2b8;border-left:3px solid #ac8955;background:#fffcf5;padding:18px 20px;margin-bottom:11px}
+.news-meta{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px;color:#938165;font-size:10px;letter-spacing:.6px}
+.news-type{font-size:9px;letter-spacing:1.3px;font-weight:700;color:#91703c}
+.news-entry h3{font:600 16px/1.4 Cinzel,serif}
+.news-entry p{margin:8px 0 10px;color:#806f59;font-size:12px;line-height:1.6}
+.news-action{padding:4px 0;border:0;background:none;color:#866639;font-size:11px;font-weight:700}
+.news-action:hover{text-decoration:underline}
+.news-empty{font-size:12px;color:#8a785f;padding:15px}
+.game-row{display:flex;align-items:center;text-align:left;width:100%;height:64px;min-height:64px;min-width:0;padding:8px 14px;gap:13px;background:#fffaf1;color:#4d3c27;border:1px solid #dbc9ad;border-left:3px solid #ba9b68;margin-bottom:8px}
+.game-row:hover{background:#f5ebd8;border-color:#a88953}
+.game-row-icon{width:30px;flex:0 0 30px;display:grid;place-items:center;font-size:21px;color:#9b7a48}
+.game-row-title{font:600 14px/1.4 Cinzel,serif;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0;flex:1}
+.game-row-progress{display:flex;align-items:center;gap:9px;flex:0 0 auto;color:#806039;font-size:12px;white-space:nowrap}
+.game-row-progress strong{min-width:35px;text-align:right;font-variant-numeric:tabular-nums}
+.game-row-track{width:85px;height:5px;background:#e5d9c6;overflow:hidden;display:block}
+.game-row-track span{display:block;height:100%;background:#9b8053}
+.game-row-chevron{font-size:24px;color:#9a815c;margin-left:4px;line-height:1}
+@media(max-width:700px){
+  .bottom-bar nav button{flex:1 1 0;min-width:0}
+  .news-panel,.games-panel{padding:15px}
+  .news-entry{padding:15px}
+  .games-help{font-size:11px}
+  .game-row{height:57px;min-height:57px;padding:6px 8px;gap:7px}
+  .game-row-icon{width:24px;flex-basis:24px;font-size:19px}
+  .game-row-title{font-size:11px}
+  .game-row-progress{gap:5px;font-size:11px}
+  .game-row-progress strong{min-width:31px}
+  .game-row-track{width:40px}
+  .game-row-chevron{font-size:19px;margin-left:1px}
+}
+@media(max-width:350px){.game-row-track{width:25px}.bottom-bar nav button{font-size:7px}}
