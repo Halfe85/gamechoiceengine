@@ -1,6 +1,6 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 
-type View = 'journey' | 'quests' | 'chronicle' | 'library';
+type View = 'home' | 'journey' | 'quests' | 'chronicle';
 type Tone = 'supports' | 'conflicts' | 'unknown';
 interface Game { id:string; title:string; developer:string; adapter:string; description:string; }
 interface Episode { id:string; game_id:string; number:number; title:string; coverage:string; }
@@ -10,7 +10,7 @@ interface Option { id:string; node_id:string; position:number; label:string; res
 interface Effect { id:string; option_id:string; variable_id:string; value:string; verification:string; }
 interface Goal { id:string; game_id:string; name:string; description:string; coverage:string; }
 interface Rule { id:string; goal_id:string; variable_id:string; expected_value:string; confidence:string; }
-interface Quest { id:string; episode_id:string|null; title:string; description:string; coverage:string; }
+interface Quest { id:string; game_id:string; episode_id:string|null; title:string; description:string; coverage:string; }
 interface QuestObjective { id:string; quest_id:string; title:string; variable_id:string|null; expected_value:string|null; }
 interface NodeQuestLink { node_id:string; objective_id:string; }
 interface Data {
@@ -21,7 +21,8 @@ interface Data {
 interface SavedPosition { episode:string; scene:string; index:number; }
 @Component({selector:'app-root',standalone:true,templateUrl:'./app.component.html',styleUrl:'./app.component.css'})
 export class AppComponent implements OnInit {
- readonly view=signal<View>('journey');
+ readonly view=signal<View>('home');
+ readonly gameId=signal('got-telltale');
  readonly dataset=signal<Data|null>(null);
  readonly error=signal('');
  readonly loading=signal(true);
@@ -31,9 +32,12 @@ export class AppComponent implements OnInit {
  readonly index=signal(0);
  readonly progress=signal<Record<string,string>>({});
  readonly resetConfirm=signal(false);
+ readonly games=computed(()=>this.dataset()?.games ?? []);
+ readonly currentGame=computed(()=>this.games().find(g=>g.id===this.gameId()) ?? null);
  readonly chapters=computed(()=>this.dataset()?.scenes.filter(s=>s.episode_id===this.episodeId()) ?? []);
- readonly episodes=computed(()=>this.dataset()?.episodes ?? []);
- readonly goals=computed(()=>this.dataset()?.goals ?? []);
+ readonly episodes=computed(()=>this.dataset()?.episodes.filter(e=>e.game_id===this.gameId()) ?? []);
+ readonly goals=computed(()=>this.dataset()?.goals.filter(g=>g.game_id===this.gameId()) ?? []);
+ readonly quests=computed(()=>this.dataset()?.quests.filter(q=>q.game_id===this.gameId()) ?? []);
  readonly nodes=computed(()=>(this.dataset()?.nodes.filter(n=>n.scene_id===this.sceneId()) ?? []).sort((a,b)=>a.position-b.position));
  readonly activeNode=computed(()=>this.nodes()[this.index()] ?? null);
  readonly currentEpisode=computed(()=>this.episodes().find(e=>e.id===this.episodeId()));
@@ -41,22 +45,18 @@ export class AppComponent implements OnInit {
  readonly selectedGoal=computed(()=>this.goals().find(g=>g.id===this.goalId()));
  readonly completed=computed(()=>this.nodes().filter(n=>!!this.progress()[n.id]).length);
  readonly completion=computed(()=>this.nodes().length?Math.round(100*this.completed()/this.nodes().length):0);
- readonly records=computed(()=>this.dataset()?.nodes.filter(n=>!!this.progress()[n.id]) ?? []);
+ readonly records=computed(()=>{
+   const d=this.dataset();if(!d)return [];
+   const episodeIds=new Set(d.episodes.filter(e=>e.game_id===this.gameId()).map(e=>e.id));
+   const sceneIds=new Set(d.scenes.filter(s=>episodeIds.has(s.episode_id)).map(s=>s.id));
+   return d.nodes.filter(n=>sceneIds.has(n.scene_id)&&!!this.progress()[n.id]);
+ });
  readonly toneLabels:Record<Tone,string>={supports:'Supports goal',conflicts:'Conflicts',unknown:'Unverified'};
  constructor(){
    try{
-     const history=localStorage.getItem('gce-got-progress-v1');
-     if(history)this.progress.set(JSON.parse(history));
-     const saved=localStorage.getItem('gce-got-position-v1');
-     if(saved){
-       const position=JSON.parse(saved) as SavedPosition;
-       this.episodeId.set(position.episode);
-       this.sceneId.set(position.scene);
-       this.index.set(position.index);
-     }
-     const goal=localStorage.getItem('gce-got-goal-v1');
-     if(goal)this.goalId.set(goal);
-   }catch{/* Storage may be disabled; a volatile demo still works. */}
+     const savedGame=localStorage.getItem('gce-selected-game-v1');
+     if(savedGame)this.gameId.set(savedGame);
+   }catch{/* Local storage may be unavailable. */}
  }
  async ngOnInit(){
    try{
@@ -65,12 +65,51 @@ export class AppComponent implements OnInit {
      const data=await response.json() as Data;
      if(data.schemaVersion!==1)throw new Error('Unsupported game database version');
      this.dataset.set(data);
-     if(!data.episodes.some(e=>e.id===this.episodeId()))this.episodeId.set(data.episodes[0]?.id ?? '');
-     if(!data.scenes.some(s=>s.id===this.sceneId()&&s.episode_id===this.episodeId()))this.sceneId.set(data.scenes.find(s=>s.episode_id===this.episodeId())?.id ?? '');
-     if(!data.goals.some(g=>g.id===this.goalId()))this.goalId.set(data.goals[0]?.id ?? '');
-     this.index.update(i=>Math.max(0,Math.min(this.nodes().length-1,i)));
+     const initialGame=data.games.some(g=>g.id===this.gameId())?this.gameId():data.games[0]?.id ?? '';
+     this.gameId.set(initialGame);
+     this.loadForGame(initialGame);
    }catch(err){this.error.set(err instanceof Error?err.message:String(err));}
    finally{this.loading.set(false);}
+ }
+ episodeCount(gameId:string):number{return this.dataset()?.episodes.filter(e=>e.game_id===gameId).length??0;}
+ hasEpisodes(gameId:string):boolean{return this.episodeCount(gameId)>0;}
+ selectGame(id:string){
+   if(!this.games().some(g=>g.id===id))return;
+   this.gameId.set(id);
+   this.loadForGame(id);
+   this.resetConfirm.set(false);
+   this.view.set('journey');
+   try{localStorage.setItem('gce-selected-game-v1',id);}catch{}
+ }
+ private loadForGame(id:string){
+   const d=this.dataset();if(!d)return;
+   let progress:Record<string,string>={};
+   let position:SavedPosition|null=null;
+   let goal='';
+   try{
+     const priorProgress=localStorage.getItem('gce-'+id+'-progress-v1') ??
+       (id==='got-telltale'?localStorage.getItem('gce-got-progress-v1'):null);
+     if(priorProgress){
+       const parsed:unknown=JSON.parse(priorProgress);
+       if(parsed&&typeof parsed==='object'&&!Array.isArray(parsed))progress=parsed as Record<string,string>;
+     }
+     const priorPosition=localStorage.getItem('gce-'+id+'-position-v1') ??
+       (id==='got-telltale'?localStorage.getItem('gce-got-position-v1'):null);
+     if(priorPosition)position=JSON.parse(priorPosition) as SavedPosition;
+     goal=localStorage.getItem('gce-'+id+'-goal-v1') ??
+       (id==='got-telltale'?localStorage.getItem('gce-got-goal-v1'):'') ?? '';
+   }catch{/* Saved data may be invalid or unavailable. */}
+   this.progress.set(progress);
+   const episodes=d.episodes.filter(e=>e.game_id===id);
+   const episode=episodes.find(e=>e.id===position?.episode)?.id ?? episodes[0]?.id ?? '';
+   this.episodeId.set(episode);
+   const scenes=d.scenes.filter(scene=>scene.episode_id===episode);
+   this.sceneId.set(scenes.find(scene=>scene.id===position?.scene)?.id ?? scenes[0]?.id ?? '');
+   const goals=d.goals.filter(g=>g.game_id===id);
+   this.goalId.set(goals.find(g=>g.id===goal)?.id ?? goals[0]?.id ?? '');
+   const length=d.nodes.filter(node=>node.scene_id===this.sceneId()).length;
+   const savedIndex=position&&Number.isInteger(position.index)?position.index:0;
+   this.index.set(Math.max(0,Math.min(length-1,savedIndex)));
  }
  optionsFor(node:Node):Option[]{return this.dataset()?.options.filter(o=>o.node_id===node.id).sort((a,b)=>a.position-b.position)??[];}
  goalTone(option:Option):Tone{
@@ -97,7 +136,7 @@ export class AppComponent implements OnInit {
    this.index.set(0);this.savePosition();
  }
  selectScene(id:string){this.sceneId.set(id);this.index.set(0);this.savePosition();}
- selectGoal(id:string){this.goalId.set(id);try{localStorage.setItem('gce-got-goal-v1',id);}catch{}}
+ selectGoal(id:string){this.goalId.set(id);try{localStorage.setItem('gce-'+this.gameId()+'-goal-v1',id);}catch{}}
  labelFor(node:Node):string{
    const id=this.chosen(node);
    if(id==='done')return 'Completed';
@@ -116,6 +155,6 @@ export class AppComponent implements OnInit {
    this.progress.set({});this.index.set(0);this.resetConfirm.set(false);this.saveProgress();this.savePosition();
  }
  cancelReset(){this.resetConfirm.set(false);}
- private saveProgress(){try{localStorage.setItem('gce-got-progress-v1',JSON.stringify(this.progress()));}catch{}}
- private savePosition(){try{localStorage.setItem('gce-got-position-v1',JSON.stringify({episode:this.episodeId(),scene:this.sceneId(),index:this.index()}));}catch{}}
+ private saveProgress(){try{localStorage.setItem('gce-'+this.gameId()+'-progress-v1',JSON.stringify(this.progress()));}catch{}}
+ private savePosition(){try{localStorage.setItem('gce-'+this.gameId()+'-position-v1',JSON.stringify({episode:this.episodeId(),scene:this.sceneId(),index:this.index()}));}catch{}}
 }
