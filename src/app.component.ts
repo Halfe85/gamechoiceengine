@@ -1,6 +1,7 @@
 import { Component, OnInit, computed, signal } from '@angular/core';
 
-type View = 'home' | 'games' | 'journey' | 'quests' | 'chronicle';
+type View = 'home' | 'games' | 'ending' | 'chapters' | 'journey' | 'quests' | 'chronicle';
+type EndingPreference = 'best' | 'bad' | 'balanced' | 'own';
 type Tone = 'supports' | 'conflicts' | 'unknown';
 interface Game { id:string; title:string; developer:string; adapter:string; description:string; }
 interface NewsItem { id:string; game_id:string|null; kind:string; title:string; description:string; published_on:string; sort_order:number; }
@@ -27,7 +28,14 @@ export class AppComponent implements OnInit {
  readonly dataset=signal<Data|null>(null);
  readonly error=signal('');
  readonly loading=signal(true);
- readonly goalId=signal('keep-bowen');
+ readonly endingPreference=signal<EndingPreference|null>(null);
+ readonly endingDraft=signal<EndingPreference|null>(null);
+ readonly endingChoices:ReadonlyArray<{id:EndingPreference;title:string;description:string;symbol:string}>=[
+   {id:'best',title:'Best Ending',description:'Aim for the most favorable outcome.',symbol:'✧'},
+   {id:'bad',title:'Bad Ending',description:'Explore a darker path through the story.',symbol:'◆'},
+   {id:'balanced',title:'Balanced Ending',description:'Look for a middle ground between extremes.',symbol:'⚖'},
+   {id:'own',title:'My Own Story',description:'Track your decisions without aiming for an ending.',symbol:'✦'}
+ ];
  readonly episodeId=signal('got-e1');
  readonly sceneId=signal('got-e1-c1');
  readonly index=signal(0);
@@ -63,13 +71,20 @@ export class AppComponent implements OnInit {
  readonly currentGame=computed(()=>this.games().find(g=>g.id===this.gameId()) ?? null);
  readonly chapters=computed(()=>this.dataset()?.scenes.filter(s=>s.episode_id===this.episodeId()) ?? []);
  readonly episodes=computed(()=>this.dataset()?.episodes.filter(e=>e.game_id===this.gameId()) ?? []);
- readonly goals=computed(()=>this.dataset()?.goals.filter(g=>g.game_id===this.gameId()) ?? []);
+ readonly endingLabel=computed(()=>this.endingChoices.find(choice=>choice.id===this.endingPreference())?.title ?? 'Choose an ending');
+ // Spoiler-free ending preferences are separate from evidence-backed story goals.
+ // Do not recommend story choices unless a specific game goal is explicitly mapped.
+ readonly mappedGoal=computed(()=>{
+   const pref=this.endingPreference();
+   const game=this.gameId();
+   if(!pref||pref==='own')return null;
+   return this.dataset()?.goals.find(g=>g.game_id===game && g.id===game+'-'+pref+'-ending' && g.coverage!=='unmapped') ?? null;
+ });
  readonly quests=computed(()=>this.dataset()?.quests.filter(q=>q.game_id===this.gameId()) ?? []);
  readonly nodes=computed(()=>(this.dataset()?.nodes.filter(n=>n.scene_id===this.sceneId()) ?? []).sort((a,b)=>a.position-b.position));
  readonly activeNode=computed(()=>this.nodes()[this.index()] ?? null);
  readonly currentEpisode=computed(()=>this.episodes().find(e=>e.id===this.episodeId()));
  readonly currentScene=computed(()=>this.chapters().find(s=>s.id===this.sceneId()));
- readonly selectedGoal=computed(()=>this.goals().find(g=>g.id===this.goalId()));
  readonly completed=computed(()=>this.nodes().filter(n=>!!this.progress()[n.id]).length);
  readonly completion=computed(()=>this.nodes().length?Math.round(100*this.completed()/this.nodes().length):0);
  readonly records=computed(()=>{
@@ -118,6 +133,21 @@ export class AppComponent implements OnInit {
    }
    this.savedProgressByGame.set(cache);
  }
+ chooseEnding(choice:EndingPreference){this.endingDraft.set(choice);}
+ openEndingSelection(){this.endingDraft.set(this.endingPreference());this.view.set('ending');}
+ confirmEnding(){
+   const chosen=this.endingDraft();
+   if(!chosen)return;
+   this.endingPreference.set(chosen);
+   try{localStorage.setItem('gce-'+this.gameId()+'-ending-preference-v1',chosen);}catch{}
+   this.view.set('journey');
+ }
+ openTracker(){
+   if(!this.endingPreference()){this.openEndingSelection();return;}
+   this.view.set('journey');
+ }
+ openChapters(){this.view.set('chapters');}
+ goToChapter(id:string){this.selectScene(id);this.openTracker();}
  episodeCount(gameId:string):number{return this.dataset()?.episodes.filter(e=>e.game_id===gameId).length??0;}
  hasEpisodes(gameId:string):boolean{return this.episodeCount(gameId)>0;}
  selectGame(id:string){
@@ -125,14 +155,15 @@ export class AppComponent implements OnInit {
    this.gameId.set(id);
    this.loadForGame(id);
    this.resetConfirm.set(false);
-   this.view.set('journey');
+   this.endingDraft.set(this.endingPreference());
+   this.view.set('ending');
    try{localStorage.setItem('gce-selected-game-v1',id);}catch{}
  }
  private loadForGame(id:string){
    const d=this.dataset();if(!d)return;
    let progress:Record<string,string>={};
    let position:SavedPosition|null=null;
-   let goal='';
+   let preference:EndingPreference|null=null;
    try{
      const priorProgress=localStorage.getItem('gce-'+id+'-progress-v1') ??
        (id==='got-telltale'?localStorage.getItem('gce-got-progress-v1'):null);
@@ -143,8 +174,8 @@ export class AppComponent implements OnInit {
      const priorPosition=localStorage.getItem('gce-'+id+'-position-v1') ??
        (id==='got-telltale'?localStorage.getItem('gce-got-position-v1'):null);
      if(priorPosition)position=JSON.parse(priorPosition) as SavedPosition;
-     goal=localStorage.getItem('gce-'+id+'-goal-v1') ??
-       (id==='got-telltale'?localStorage.getItem('gce-got-goal-v1'):'') ?? '';
+     const value=localStorage.getItem('gce-'+id+'-ending-preference-v1');
+     if(value==='best'||value==='bad'||value==='balanced'||value==='own')preference=value;
    }catch{/* Saved data may be invalid or unavailable. */}
    this.progress.set(progress);
    const episodes=d.episodes.filter(e=>e.game_id===id);
@@ -152,8 +183,8 @@ export class AppComponent implements OnInit {
    this.episodeId.set(episode);
    const scenes=d.scenes.filter(scene=>scene.episode_id===episode);
    this.sceneId.set(scenes.find(scene=>scene.id===position?.scene)?.id ?? scenes[0]?.id ?? '');
-   const goals=d.goals.filter(g=>g.game_id===id);
-   this.goalId.set(goals.find(g=>g.id===goal)?.id ?? goals[0]?.id ?? '');
+   this.endingPreference.set(preference);
+   this.endingDraft.set(preference);
    const length=d.nodes.filter(node=>node.scene_id===this.sceneId()).length;
    const savedIndex=position&&Number.isInteger(position.index)?position.index:0;
    this.index.set(Math.max(0,Math.min(length-1,savedIndex)));
@@ -161,7 +192,7 @@ export class AppComponent implements OnInit {
  optionsFor(node:Node):Option[]{return this.dataset()?.options.filter(o=>o.node_id===node.id).sort((a,b)=>a.position-b.position)??[];}
  goalTone(option:Option):Tone{
    const d=this.dataset();if(!d)return 'unknown';
-   const goal=this.selectedGoal();if(!goal||goal.coverage==='unmapped')return 'unknown';
+   const goal=this.mappedGoal();if(!goal)return 'unknown';
    const verified=d.effects.filter(e=>e.option_id===option.id && e.verification==='verified');
    const rules=d.goal_rules.filter(r=>r.goal_id===goal.id&&r.confidence==='verified');
    for(const effect of verified){
@@ -183,7 +214,6 @@ export class AppComponent implements OnInit {
    this.index.set(0);this.savePosition();
  }
  selectScene(id:string){this.sceneId.set(id);this.index.set(0);this.savePosition();}
- selectGoal(id:string){this.goalId.set(id);try{localStorage.setItem('gce-'+this.gameId()+'-goal-v1',id);}catch{}}
  labelFor(node:Node):string{
    const id=this.chosen(node);
    if(id==='done')return 'Completed';

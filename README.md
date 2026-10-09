@@ -2,7 +2,15 @@
 
 Mobile-first Angular companion for story-driven games: **dialogue, actions, choices, QTEs, quest objectives, player state and goal-aware routes**.
 
-The **Home** screen is an internal news feed (new games and story-content updates) backed by SQLite `news_items`. The separate **Games** tab immediately to its right lists registered games in compact single-line rows. A progress bar and percentage appear only after a player records at least one choice or action; the percentage is computed against **currently mapped story steps**, not the whole game, because content coverage is incomplete. Decision history remains available from the Story Tracker, not as a separate bottom tab. **Game of Thrones: A Telltale Games Series** has six episodes indexed, with a **partial** sample for episode 1 chapter 1. **Baldur's Gate 3** is registered as a planned game with no story content yet. This is an alpha, not a complete walkthrough.
+The **Home** screen is an internal news feed (new games and story-content updates) backed by SQLite `news_items`. The separate **Games** tab immediately to its right lists registered games in compact single-line rows. A progress bar and percentage appear only after a player records at least one choice or action; the percentage is computed against **currently mapped story steps**, not the whole game, because content coverage is incomplete. Decision history remains available from the Story Tracker, not as a separate bottom tab.
+
+## Story tracking flow
+
+Selecting a game opens a **single, spoiler-free ending preference screen**: Best Ending, Bad Ending, Balanced Ending, or My Own Story. After confirming, the tracker opens. The choice is saved per game separately from any recorded story decisions, and can be changed later.
+
+On screens 900px wide or narrower, Tracker shows **only the active tracking panel**. Ending preference and episode/chapter navigation each have their own full content views; sidebars are hidden rather than stacked. Desktop retains optional contextual panels.
+
+Preferences are not proof of a known route. A goal only colors choices when explicit, verified goals and effects exist in the content database. The present Telltale prototype does not yet map complete endings, so its options stay neutral. **Game of Thrones: A Telltale Games Series** has six episodes indexed, with a **partial** sample for episode 1 chapter 1. **Baldur's Gate 3** is registered as a planned game with no story content yet. This is an alpha, not a complete walkthrough.
 
 ## Develop locally
 

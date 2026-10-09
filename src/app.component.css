@@ -113,3 +113,66 @@
   .game-row-chevron{font-size:19px;margin-left:1px}
 }
 @media(max-width:350px){.game-row-track{width:25px}.bottom-bar nav button{font-size:7px}}
+
+/* Standalone, spoiler-free ending selection – one screen, one responsibility. */
+.ending-panel,.chapters-panel{max-width:790px;display:flex;flex-direction:column;overflow:hidden}
+.ending-panel>.overline,.chapters-panel>.overline{margin-bottom:10px}
+.ending-panel h2,.chapters-panel h2{margin-bottom:5px}
+.ending-intro{font-size:13px!important;color:#85725a;line-height:1.7;margin:7px 0 18px!important}
+.ending-options,.chapter-options{display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto;scrollbar-width:thin;padding:2px 4px 6px 1px}
+.ending-options{flex:1}
+.ending-option{display:flex;align-items:center;text-align:left;gap:16px;width:100%;min-height:84px;padding:14px 17px;background:#fffbf3;border:1px solid #d9c7a7;border-left:4px solid #c8af7f;color:#4e4030;transition:background .15s,border-color .15s}
+.ending-option:hover,.ending-option.is-selected{background:#f2e6cf;border-color:#a98750}
+.ending-option.is-selected{border-left-color:#9a7741}
+.ending-symbol{display:grid;place-items:center;flex:0 0 45px;width:45px;height:45px;background:#eee3d0;border:1px solid #d7c29b;color:#98733c;font-size:23px}
+.ending-option-copy{display:flex;flex:1;flex-direction:column;gap:6px;min-width:0}
+.ending-option-copy strong{font:600 16px Cinzel,serif}
+.ending-option-copy small{font-size:12px;line-height:1.5;color:#8a7964}
+.ending-check{font-size:24px;color:#98753c}
+.ending-disclaimer{flex-shrink:0;font-size:11px!important;line-height:1.5;color:#8f7c62;margin:11px 0!important}
+.ending-footer{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-shrink:0;border-top:1px solid #e4d4ba;margin-top:auto;padding-top:15px}
+.ending-footer button{padding:12px 17px;border:1px solid #bca173;font-size:12px;font-weight:700;min-height:43px}
+.ending-back{background:transparent;color:#7e6546}
+.ending-continue{background:#88693a;color:#fffbf1;border-color:#88693a!important}
+.ending-continue:disabled{opacity:.4;cursor:not-allowed}
+.section-label{font-size:10px;letter-spacing:1px;color:#987847;font-weight:700;margin:5px 0 12px}
+.chapter-episode-select{flex-shrink:0;margin-top:0;margin-bottom:16px}
+.chapters-panel .chapter-options{flex:1}
+.chapter-option{display:flex;align-items:center;text-align:left;gap:15px;padding:15px 17px;min-height:62px;background:#fffaf0;border:1px solid #e0ceb0;color:#5c4933}
+.chapter-option:hover{background:#f3e7d2}
+.chapter-number{font:700 15px Cinzel,serif;color:#ab8851;min-width:25px}
+.chapter-name{font:600 12px Cinzel,serif;flex:1}
+.desired-ending-button{display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;width:100%;min-height:49px;padding:11px 12px;background:#fff8ed;border:1px solid #ceb68c;color:#6a4d2c;font:600 12px Cinzel,serif}
+.desired-ending-button>span:last-child{font:700 9px 'DM Sans',sans-serif;white-space:nowrap}
+.desktop-chapters{border:0;background:transparent;font-size:11px;font-weight:700;color:#8f703f;margin-top:14px;padding:8px 0;text-align:left}
+.tracker-tools{display:flex;gap:9px;margin:-6px 0 12px}
+.tracker-tools button{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0;flex:1;background:#f8f0e2;color:#795c34;border:1px solid #dfcbaa;font-size:10px;font-weight:700;min-height:36px;padding:7px 10px}
+.tracker-tools button:hover{background:#eee0c8}
+@media(max-width:900px){
+ /* Only the active task remains visible on mobile/tablet. */
+ .columns{display:flex;flex-direction:column;gap:0;overflow:hidden;min-height:0}
+ .columns>.story,.columns>.quests{display:none}
+ .columns>.tracker{display:flex;flex:1;min-height:0}
+ .tracker .chapter{display:none}
+ .tracker-tools{margin:0 0 12px}
+ .ending-panel,.chapters-panel{width:100%;max-width:none}
+}
+@media(max-width:700px){
+ .ending-panel,.chapters-panel{padding:16px}
+ .ending-panel h2,.chapters-panel h2{font-size:20px}
+ .ending-intro{font-size:12px!important;margin:5px 0 12px!important}
+ .ending-option{min-height:73px;padding:10px 11px;gap:10px}
+ .ending-symbol{width:35px;flex-basis:35px;height:37px;font-size:21px}
+ .ending-option-copy strong{font-size:13px}
+ .ending-option-copy small{font-size:10px}
+ .ending-check{font-size:19px}
+ .ending-disclaimer{font-size:10px!important;margin:8px 0!important}
+ .ending-footer{padding-top:11px}
+ .ending-footer button{padding:10px 11px;font-size:11px}
+ .tracker-tools button{font-size:9px}
+ .tracker .choice-scroll{flex:1}
+}
+@media(max-height:650px){
+ .ending-option{min-height:60px}
+ .ending-disclaimer{margin:7px 0!important}
+}
