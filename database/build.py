@@ -27,6 +27,10 @@ def make_database(db):
     insert(db, "games", id="got-telltale", title="Game of Thrones: A Telltale Games Series",
            developer="Telltale Games", adapter="telltale",
            description="Follow House Forrester through an episodic story.")
+    # Game registry entries appear in Home even before their story graph is authored.
+    insert(db, "games", id="baldurs-gate-3", title="Baldur's Gate 3",
+           developer="Larian Studios", adapter="bg3",
+           description="Party-based fantasy RPG with dialogue, quests and dice checks. Story mapping is planned.")
     for number, name in enumerate(EPISODES, start=1):
         insert(db, "episodes", id=f"got-e{number}", game_id="got-telltale",
                number=number, title=name, coverage="partial" if number == 1 else "metadata")

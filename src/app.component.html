@@ -1,12 +1,31 @@
 <div class="main-window">
-<header class="top-bar"><div class="brand"><span class="sigil">✦</span><div><strong>CHOICE<span>ENGINE</span></strong><small>YOUR STORY, YOUR DESTINY</small></div></div><div class="prototype">GAME OF THRONES · ALPHA</div></header>
-<main class="content"><div class="page-title"><div class="eyebrow">◆ THE ADVENTURER'S COMPANION ◆</div><h1>{{view()==='journey'?'The Journey':view()==='quests'?'Quest Ledger':view()==='chronicle'?'Chronicle':'Game Library'}}</h1><div class="ornament">━━━━ ✧ ━━━━</div></div>
-@if(loading()){<section class="panel expanded"><h2>Opening the chronicle...</h2><p>Loading the Game of Thrones story database.</p></section>}
+<header class="top-bar"><div class="brand"><span class="sigil">✦</span><div><strong>CHOICE<span>ENGINE</span></strong><small>YOUR STORY, YOUR DESTINY</small></div></div><div class="prototype">MULTI-GAME · ALPHA</div></header>
+<main class="content"><div class="page-title"><div class="eyebrow">◆ THE ADVENTURER'S COMPANION ◆</div><h1>{{view()==='home'?'Home':view()==='journey'?'Story Tracker':view()==='quests'?'Quest Ledger':'Chronicle'}}</h1><div class="ornament">━━━━ ✧ ━━━━</div></div>
+@if(loading()){<section class="panel expanded"><h2>Opening the game library...</h2><p>Loading the game catalog.</p></section>}
 @else if(error()){<section class="panel expanded"><h2>Unable to load story</h2><p>{{error()}}</p><p>Verify that the database build produced public/data/game-of-thrones.json.</p></section>}
 @else if(dataset();as data){
-@if(view()==='journey'){
+@if(view()==='home'){
+<section class="panel expanded home-panel">
+<div class="overline">CHOOSE YOUR ADVENTURE</div>
+<h2>Game Library</h2>
+<p>Select a game to open its story tracker, quests and saved choices.</p>
+<div class="games-grid">
+@for(game of data.games;track game.id){
+<button class="game-card" (click)="selectGame(game.id)" [attr.aria-label]="'Open '+game.title">
+  <span class="game-card-top"><span class="game-avatar">{{game.adapter==='telltale'?'♜':'⚔'}}</span><span class="game-status" [class.planned]="!hasEpisodes(game.id)">{{hasEpisodes(game.id)?'IN DEVELOPMENT':'PLANNED'}}</span></span>
+  <strong>{{game.title}}</strong>
+  <small>{{game.developer}}</small>
+  <p>{{game.description}}</p>
+  <span class="game-card-bottom"><span>{{hasEpisodes(game.id)?episodeCount(game.id)+' EPISODES INDEXED':'STORY DATA PENDING'}}</span><span>OPEN →</span></span>
+</button>
+}@empty{<p>No games have been registered yet.</p>}
+</div>
+</section>
+}
+@else if(view()==='journey'){
+@if(episodes().length){
 <div class="columns">
-<section class="panel story"><div class="overline">CURRENT ADVENTURE</div><div class="game"><span class="game-icon">♜</span><div><h2>Game of Thrones</h2><small>A TELLTALE GAMES SERIES</small></div></div><hr><label class="overline" for="episode">EPISODE</label><div class="select-box"><span>❖</span><select id="episode" [value]="episodeId()" (change)="selectEpisode($any($event.target).value)">@for(ep of episodes();track ep.id){<option [value]="ep.id">{{ep.number}} · {{ep.title}}</option>}</select></div><label class="overline goal-label" for="ending">YOUR DESIRED OUTCOME</label><div class="select-box"><span>✧</span><select id="ending" [value]="goalId()" (change)="selectGoal($any($event.target).value)">@for(goal of goals();track goal.id){<option [value]="goal.id">{{goal.name}}</option>}</select></div><p>{{selectedGoal()?.description}}</p><div class="quote"><span>✦</span><div><h3>Threads of Fate</h3><p>Green supports your goal, red conflicts with it. Unverified consequences stay neutral until evidence is added.</p></div></div><div class="progress"><div>CHAPTER COVERAGE <b>{{completed()}} / {{nodes().length}} tracked</b></div><i><span [style.width.%]="completion()"></span></i></div></section>
+<section class="panel story"><div class="overline">CURRENT ADVENTURE</div><div class="game"><span class="game-icon">{{currentGame()?.adapter==='telltale'?'♜':'⚔'}}</span><div><h2>{{currentGame()?.title}}</h2><small>{{currentGame()?.developer}}</small></div></div><hr><label class="overline" for="episode">EPISODE</label><div class="select-box"><span>❖</span><select id="episode" [value]="episodeId()" (change)="selectEpisode($any($event.target).value)">@for(ep of episodes();track ep.id){<option [value]="ep.id">{{ep.number}} · {{ep.title}}</option>}</select></div><label class="overline goal-label" for="ending">YOUR DESIRED OUTCOME</label><div class="select-box"><span>✧</span><select id="ending" [value]="goalId()" (change)="selectGoal($any($event.target).value)">@for(goal of goals();track goal.id){<option [value]="goal.id">{{goal.name}}</option>}</select></div><p>{{selectedGoal()?.description}}</p><div class="quote"><span>✦</span><div><h3>Threads of Fate</h3><p>Green supports your goal, red conflicts with it. Unverified consequences stay neutral until evidence is added.</p></div></div><div class="progress"><div>CHAPTER COVERAGE <b>{{completed()}} / {{nodes().length}} tracked</b></div><i><span [style.width.%]="completion()"></span></i></div></section>
 <section class="panel tracker"><div class="overline">LIVE STORY TRACKER</div><div class="eyebrow">EPISODE {{currentEpisode()?.number}} · {{currentScene()?.title}}</div><h2>{{activeNode()?.title || 'Chapter not mapped yet'}}</h2><p>{{activeNode()?.description || 'This chapter is in the episode index. Detailed actions and dialogue are not yet verified and entered.'}}</p><div class="chapter"><button (click)="previous()" [disabled]="index()===0 || !nodes().length" aria-label="Previous event">‹</button><select [value]="sceneId()" (change)="selectScene($any($event.target).value)" aria-label="Chapter">@for(scene of chapters();track scene.id){<option [value]="scene.id">{{scene.title}}</option>}</select><button (click)="next()" [disabled]="index()>=nodes().length-1 || !nodes().length" aria-label="Next event">›</button></div>
 @if(activeNode();as node){<div class="choice-caption">{{node.kind.toUpperCase()}} · STEP {{index()+1}} / {{nodes().length}} <span>{{node.coverage.toUpperCase()}} DATA</span></div>
 <div class="choice-scroll">
@@ -16,12 +35,19 @@
 <div class="hint">✧ &nbsp;{{chosen(node)?'Recorded: '+labelFor(node):'Track one event at a time as you play.'}}</div>
 } @else {<div class="empty-state"><span>✧</span><strong>Awaiting research</strong><p>Episode metadata exists, but no event sequence has been verified for this chapter.</p></div>}
 </section>
-<aside class="panel quests"><div class="overline">THE QUEST LEDGER</div><div class="quest-header"><h2>Objectives</h2><button (click)="view.set('quests')">VIEW ALL ↗</button></div>@for(quest of data.quests;track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>EPISODE 1 · CHAPTER 1</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><i class="quest-track"><span [style.width]="questCompleted(quest)?'100%':'0%'"></span></i></span></div>}<div class="quest-summary">✦ RECORDED EVENTS <b>{{records().length}} / {{data.nodes.length}}</b></div></aside>
+<aside class="panel quests"><div class="overline">THE QUEST LEDGER</div><div class="quest-header"><h2>Objectives</h2><button (click)="view.set('quests')">VIEW ALL ↗</button></div>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><i class="quest-track"><span [style.width]="questCompleted(quest)?'100%':'0%'"></span></i></span></div>}<div class="quest-summary">✦ RECORDED EVENTS <b>{{records().length}} / {{data.nodes.length}}</b></div></aside>
 </div>
+} @else{
+<section class="panel expanded">
+  <div class="overline">GAME SELECTED</div>
+  <h2>{{currentGame()?.title}}</h2>
+  <p>This game is registered, but no episodes, choices or quests have been mapped yet.</p>
+  <button class="back-home" (click)="view.set('home')">← Back to Home</button>
+</section>
 }
-@else if(view()==='quests'){<section class="panel expanded"><div class="overline">THE QUEST LEDGER</div><h2>Tracked Objectives</h2><p>Objectives are linked to story nodes; quest state is derived from your recorded actions.</p>@for(quest of data.quests;track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><small>{{questCompleted(quest)?'TRACKED':'NOT YET RESOLVED'}}</small></span></div>}</section>}
-@else if(view()==='chronicle'){<section class="panel expanded"><div class="overline">YOUR STORY SO FAR</div><h2>Chronicle</h2><p>Recorded events stay on this device in local prototype storage.</p><div class="journal-list">@for(node of records();track node.id){<div class="journal"><div class="eyebrow">{{node.kind.toUpperCase()}}</div><h3>{{node.title}}</h3><p>{{labelFor(node)}}</p></div>}@empty{<div class="journal">No events recorded. Open Journey to begin.</div>}</div><div class="reset-row">@if(resetConfirm()){<span>Erase all local demo progress?</span><button class="danger-button" (click)="reset()">Confirm reset</button><button (click)="cancelReset()">Cancel</button>}@else{<button (click)="reset()">Reset local progress</button>}</div></section>}
-@else{<section class="panel expanded"><div class="overline">CHOOSE YOUR ADVENTURE</div><h2>Game Library</h2><button class="library-card" (click)="view.set('journey')">♜ &nbsp; Game of Thrones <small>6 EPISODES INDEXED · EPISODE 1 CHAPTER 1 PARTIAL</small></button><div class="library-card muted">⚔ &nbsp; Baldur's Gate 3 <small>ENGINE PROFILE PLANNED</small></div><p class="library-note">The game.sqlite file is built with Python/SQLite. This alpha reads its generated JSON projection; browser-side SQLite is a later phase.</p></section>}
+}
+@else if(view()==='quests'){<section class="panel expanded"><div class="overline">THE QUEST LEDGER</div><h2>Tracked Objectives</h2><p>Objectives are linked to story nodes; quest state is derived from your recorded actions.</p>@for(quest of quests();track quest.id){<div class="quest"><span class="checkbox">{{questCompleted(quest)?'✓':''}}</span><span><small>{{quest.coverage.toUpperCase()}} COVERAGE</small><strong>{{quest.title}}</strong><p>{{quest.description}}</p><small>{{questCompleted(quest)?'TRACKED':'NOT YET RESOLVED'}}</small></span></div>}</section>}
+@else if(view()==='chronicle'){<section class="panel expanded"><div class="overline">YOUR STORY SO FAR</div><h2>Chronicle</h2><p>Recorded events stay on this device in local prototype storage.</p><div class="journal-list">@for(node of records();track node.id){<div class="journal"><div class="eyebrow">{{node.kind.toUpperCase()}}</div><h3>{{node.title}}</h3><p>{{labelFor(node)}}</p></div>}@empty{<div class="journal">No events recorded. Open the Story Tracker to begin.</div>}</div><div class="reset-row">@if(resetConfirm()){<span>Erase all local demo progress?</span><button class="danger-button" (click)="reset()">Confirm reset</button><button (click)="cancelReset()">Cancel</button>}@else{<button (click)="reset()">Reset local progress</button>}</div></section>}}
 }
 </main>
-<footer class="bottom-bar"><nav aria-label="Main navigation"><button [class.active]="view()==='journey'" (click)="view.set('journey')"><span>⌖</span>JOURNEY</button><button [class.active]="view()==='quests'" (click)="view.set('quests')"><span>☷</span>QUESTS</button><button [class.active]="view()==='chronicle'" (click)="view.set('chronicle')"><span>▤</span>CHRONICLE</button><button [class.active]="view()==='library'" (click)="view.set('library')"><span>♜</span>LIBRARY</button></nav><div class="save">● LOCAL DEMO SAVE</div></footer></div>
+<footer class="bottom-bar"><nav aria-label="Main navigation"><button [class.active]="view()==='home'" (click)="view.set('home')"><span>⌂</span>HOME</button><button [class.active]="view()==='journey'" (click)="view.set('journey')"><span>⌖</span>TRACKER</button><button [class.active]="view()==='quests'" (click)="view.set('quests')"><span>☷</span>QUESTS</button><button [class.active]="view()==='chronicle'" (click)="view.set('chronicle')"><span>▤</span>CHRONICLE</button></nav><div class="save">● LOCAL DEMO SAVE</div></footer></div>
